@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zamalek Chat AI Vision 3.0</title> 
+    <title>Zamalek Chat AI - The Autonomous Edition</title> 
     <link rel="icon" href="https://upload.wikimedia.org/wikipedia/fr/0/04/ZamalekSC.png" type="image/png">
     <style>
         /*
-        * 🧠 Zamalek Chat AI Vision 3.0 - Self-Developing System 🧠
-        * Final Evolution: Autonomous AI
+        * 🧠 Zamalek Chat AI - The Autonomous Edition 🧠
+        * Rebuilt from scratch to resolve all conflicts.
         * Colors: #0d0d0d, #e41e26, #f5f5f5 (Dark) / #f0f2f5, #333 (Light)
         */
         :root {
@@ -20,6 +20,7 @@
             --shadow-color: rgba(0, 0, 0, 0.3);
             --border-radius: 16px;
             --header-height: 55px;
+            --dynamic-accent-hue: 0; /* For AI-driven theme changes */
         }
 
         html[data-theme='light'] {
@@ -103,7 +104,7 @@
             display: flex;
             align-items: center;
             gap: 10px;
-            font-size: 0.9em;
+            font-size: 1em;
             font-weight: bold;
         }
 
@@ -136,7 +137,7 @@
             border-radius: 10px;
             box-shadow: 0 4px 20px var(--shadow-color);
             z-index: 100;
-            width: 240px;
+            width: 280px;
             padding: 10px;
             display: none; /* Hidden by default */
             animation: dropdown-fade-in 0.3s ease-out;
@@ -151,7 +152,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 5px;
+            padding: 10px 5px;
             font-size: 0.9em;
         }
         .settings-item select {
@@ -163,6 +164,15 @@
         }
         .settings-item select option {
             background: var(--bg-color);
+        }
+        .settings-item button {
+            width: 100%;
+            background: var(--glass-border);
+            color: var(--text-color);
+            border: 1px solid var(--glass-border);
+            padding: 8px;
+            border-radius: 5px;
+            cursor: pointer;
         }
 
         /* Toggle Switch */
@@ -498,6 +508,11 @@
         html[data-theme='light'] .news-item .source {
             color: #555;
         }
+        .news-item img {
+            width: 40px; height: 40px;
+            border-radius: 5px;
+            float: left; margin-right: 10px; object-fit: cover;
+        }
 
         /* Self-Evolution Components (Initially Hidden) */
         .live-tracker-section {
@@ -541,15 +556,16 @@
                 <path d="M50 20 L75 45 L50 85 L25 45 Z" fill="none" stroke="white" stroke-width="5"/>
                 <path d="M50 15 L60 30 L50 35 L40 30 Z" fill="white"/>
             </svg>
-            <span>Zamalek Chat AI Vision</span>
+            <span>Zamalek Chat AI</span>
         </div>
         <button id="settings-button" class="header-button">⚙️</button>
         <div id="settings-dropdown" class="settings-dropdown">
             <div class="settings-item"><span>الوضع الليلي</span><label class="switch"><input type="checkbox" id="theme-toggle" checked><span class="slider"></span></label></div>
             <div class="settings-item"><span>صوت الردود</span><label class="switch"><input type="checkbox" id="sound-toggle"><span class="slider"></span></label></div>
-            <div class="settings-item"><span>تحديث تلقائي</span><label class="switch"><input type="checkbox" id="autoupdate-toggle" checked><span class="slider"></span></label></div>
-            <div class="settings-item"><span>صوت المعلّق</span><select id="commentator-select"><option value="auto">تلقائي</option><option value="fares">فارس عوض</option><option value="medhat">مدحت شلبي</option><option value="ali">علي محمد علي</option></select></div>
-            <div class="settings-item"><button id="clear-chat-button" style="width:100%; background:var(--primary-red); color:white; border:none; padding: 8px; border-radius: 5px; cursor:pointer;">مسح المحادثة</button></div>
+            <div class="settings-item"><span>صوت المعلّق</span><select id="commentator-select"><option value="auto">تلقائي</option><option value="fares">فارس عوض</option><option value="essam">عصام الشوالي</option><option value="raouf">رؤوف خليف</option><option value="medhat">مدحت شلبي</option></select></div>
+            <div class="settings-item"><span>تردد التحديث</span><select id="update-freq-select"><option value="120000">دقيقتان</option><option value="300000">5 دقائق</option><option value="600000">10 دقائق</option></select></div>
+            <div class="settings-item"><button id="dev-log-button">سجل التطوير الذاتي</button></div>
+            <div class="settings-item"><button id="clear-chat-button" style="background:var(--primary-red);">مسح المحادثة</button></div>
         </div>
     </div>
     
@@ -568,16 +584,17 @@
         </button>
     </div>
 
-    <div class="news-section" id="news-section">
-        <h4>📰 آخر الأخبار</h4>
-        <div id="news-content">جاري تحميل الأخبار...</div>
+    <!-- Dynamic Bottom Bar for News and Live Scores -->
+    <div class="news-section" id="bottom-bar">
+        <div id="live-tracker-section" style="display: none;">
+             <h4>🔴 مباشر</h4>
+             <div class="live-match" id="live-match-content">الزمالك 1 - 0 بيراميدز (دقيقة 75')</div>
+        </div>
+        <div id="news-section">
+            <h4>📰 آخر الأخبار</h4>
+            <div id="news-content">جاري تحميل الأخبار...</div>
+        </div>
     </div>
-</div>
-
-<!-- Self-Evolution Feature: Live Match Tracker (Initially Hidden) -->
-<div class="live-tracker-section" id="live-tracker-section">
-    <h4>🔴 بث مباشر للمباريات</h4>
-    <div class="live-match" id="live-match-content">الزمالك 1 - 0 بيراميدز (دقيقة 75')</div>
 </div>
 
 <!-- Video Modal Structure -->
@@ -591,8 +608,9 @@
 <script>
     // **********************************************
     // 🔑 مفتاح Google Gemini API 
-    // The key is now "hidden" using Base64 encoding.
-    const GEMINI_API_KEY = atob('QUl6YVN5QTd4QndZMk9xVDFwSV9ZbVdOTFBvQ1JmNUpVYUVtR0o0');
+    // This is a client-side obfuscation. In a real production app, 
+    // this key should be stored as an environment variable on a server that proxies the requests.
+    const GEMINI_API_KEY = atob('QUl6YVN5QTd4QndZMk9xVDFwSV9ZbVdOTFBvQ1JmNUpVYUVtR0o0'); // Decodes to the actual key at runtime
     const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
     // **********************************************
 
@@ -608,13 +626,15 @@
     const videoModalContent = document.getElementById('video-modal-content');
     const soundToggle = document.getElementById('sound-toggle');
     const themeToggle = document.getElementById('theme-toggle');
-    const autoUpdateToggle = document.getElementById('autoupdate-toggle');
+    const updateFreqSelect = document.getElementById('update-freq-select');
     const commentatorSelect = document.getElementById('commentator-select');
     const clearChatButton = document.getElementById('clear-chat-button');
+    const devLogButton = document.getElementById('dev-log-button');
 
     // --- State ---
     let selfUpdateInterval;
     let isOnline = true;
+    let devLog = [];
 
     // --- Initial Prompt & Conversation History ---
     let conversationHistory = [
@@ -671,12 +691,8 @@
             videoModalContent.innerHTML = '';
         });
 
-        autoUpdateToggle.addEventListener('change', () => {
-            if (autoUpdateToggle.checked) {
-                selfUpdateSystem();
-            } else {
-                clearInterval(selfUpdateInterval);
-            }
+        updateFreqSelect.addEventListener('change', () => {
+            selfUpdateSystem(); // Restart with new frequency
         });
 
         themeToggle.addEventListener('change', () => {
@@ -687,6 +703,11 @@
 
         clearChatButton.addEventListener('click', () => {
             clearChat();
+            settingsDropdown.style.display = 'none';
+        });
+
+        devLogButton.addEventListener('click', () => {
+            showDevLog();
             settingsDropdown.style.display = 'none';
         });
     }
@@ -702,6 +723,7 @@
         recognition.onstart = () => {
             micButton.style.color = 'var(--primary-red)';
             micButton.textContent = '🔴';
+            micButton.style.animation = 'pulse 1s infinite';
         };
 
         recognition.onresult = (event) => {
@@ -715,6 +737,7 @@
         recognition.onend = () => {
             micButton.style.color = 'var(--text-color)';
             micButton.textContent = '🎤';
+            micButton.style.animation = 'none';
             recognition.recognizing = false;
         };
 
@@ -782,8 +805,8 @@
         }
 
         // 2. Check for <lineup> tag
-        const lineupMatch = text.match(/<lineup>([\s\S]*?)<\/lineup>/i);
-        if (lineupMatch && lineupMatch[1] && lineupMatch[1].trim().startsWith('{')) {
+        const lineupMatch = text.match(/<lineup>([\s\S]*?)<\/lineup>/i)
+        if (lineupMatch && lineupMatch[1]) {
             try {
                 const data = JSON.parse(lineupMatch[1]);
                 let playersHtml = data.players.map(p => `
@@ -801,7 +824,7 @@
 
 
         // 3. Check for <video> tag
-        const videoMatch = text.match(/<video>(.*?)<\/video>/i);
+        const videoMatch = text.match(/<video>(.*?)<\/video>/i)
         if (videoMatch && videoMatch[1] && videoMatch[1].includes('BLOCKED')) {
             // Handle blocked video case
             return `<p>⚠️ الفيديو الأصلي محظور. جاري البحث عن بديل...<br>تم العثور على ملخص بديل. اضغط للتشغيل.</p>
@@ -947,6 +970,14 @@
         appendMessage(welcomeText, 'ai'); // Add welcome message back
         chatBox.appendChild(typingIndicator); // Add typing indicator back
         showTopNotification("🗑️ تم مسح المحادثة.");
+    }
+
+    function showDevLog() {
+        const logContent = devLog.length > 0 
+            ? devLog.map(log => `<li>[${log.timestamp}] ${log.message}</li>`).join('')
+            : '<li>لا توجد سجلات تطوير بعد.</li>';
+        const logHtml = `<h2>📝 سجل التطوير الذاتي</h2><ul>${logContent}</ul>`;
+        appendMessage(logHtml, 'ai');
     }
 
 

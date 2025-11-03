@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم المطور</title>
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/fr/0/04/ZamalekSC.png" type="image/png">
+    <style>
+        :root {
+            --bg-color: #0d0d0d;
+            --primary-red: #e41e26;
+            --text-color: #f5f5f5;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+        h1, h2 {
+            color: var(--primary-red);
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 10px;
+        }
+        .panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .panel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .control-item {
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .control-item label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .control-item button {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--primary-red);
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .status-light {
+            width: 15px;
+            height: 15px;
+            background-color: #28a745;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 10px;
+            animation: pulse-green 2s infinite;
+        }
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.7); }
+            70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🛡️ لوحة تحكم المطور (Admin Panel)</h1>
+        
+        <div class="panel">
+            <h2>الحالة العامة للنظام</h2>
+            <p><span class="status-light"></span>النظام يعمل بشكل طبيعي</p>
+            <p><strong>إصدار الواجهة:</strong> 4.0 (Autonomous)</p>
+            <p><strong>آخر فحص ذاتي:</strong> <span id="last-check">منذ ثوانٍ</span></p>
+        </div>
+
+        <div class="panel">
+            <h2>أدوات التحكم</h2>
+            <div class="panel-grid">
+                <div class="control-item">
+                    <label>فرض تحديث للنظام</label>
+                    <button onclick="alert('تم إرسال أمر التحديث القسري.')">Force AI Update</button>
+                </div>
+                <div class="control-item">
+                    <label>إعادة تشغيل واجهة الأخبار</label>
+                    <button onclick="alert('تم إعادة تشغيل وحدة الأخبار.')">Restart News Module</button>
+                </div>
+                <div class="control-item">
+                    <label>مسح سجلات الأخطاء</label>
+                    <button onclick="alert('تم مسح السجلات.')">Clear Error Logs</button>
+                </div>
+            </div>
+        </div>
+         <a href="index.html" style="color: #aaa; margin-top: 20px; display:inline-block;">تسجيل الخروج</a>
+    </div>
+</body>
+</html>
