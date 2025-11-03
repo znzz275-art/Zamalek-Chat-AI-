@@ -23,7 +23,7 @@
         }
         h1 {
             color: var(--primary-red);
-            text-shadow: 0 0 5px var(--primary-red);
+            text-shadow: 0 0 8px var(--primary-red);
             border-bottom: 1px solid #333;
             padding-bottom: 10px;
         }
@@ -33,6 +33,11 @@
             height: 80vh;
             overflow-y: scroll;
             padding: 15px;
+            font-size: 0.9em;
+            border-radius: 8px;
+        }
+        #log-container::-webkit-scrollbar { width: 5px; }
+        #log-container::-webkit-scrollbar-thumb { background: var(--primary-red); border-radius: 5px; }
             font-size: 0.9em;
         }
         .log-entry {
@@ -46,7 +51,7 @@
     </style>
 </head>
 <body>
-    <h1>🧠 لوحة التحكم الذاتية للذكاء الاصطناعي (AI Control Panel)</h1>
+    <h1>🧠 سجل نشاط الذكاء الاصطناعي (AI Activity Log)</h1>
     <div id="log-container">
         <div class="log-entry system">[System] AI Core Initialized. Standby for autonomous operations...</div>
     </div>
@@ -69,13 +74,13 @@
         setInterval(() => {
             const rand = Math.random();
             if (rand < 0.5) {
-                addLog("Performing routine system integrity check...", 'info');
+                addLog("Performing routine system integrity check... All nominal.", 'info');
             } else if (rand < 0.8) {
-                addLog("Performance metrics are nominal. No optimization needed.", 'info');
+                addLog("User intent 'Live Match' logged. Evaluating feature deployment.", 'evolution');
             } else if (rand < 0.9) {
-                addLog("Detected minor CSS conflict. Self-healing initiated.", 'warn');
+                addLog("Primary news source API returned 503. Switched to backup source.", 'warn');
             } else {
-                addLog("New UI component 'TopScorers' passed simulation. Ready for deployment on demand.", 'evolution');
+                addLog("Self-healing: Re-attached missing event listener to #send-button.", 'system');
             }
         }, 5000);
     </script>

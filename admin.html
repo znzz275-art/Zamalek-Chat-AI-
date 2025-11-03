@@ -46,6 +46,11 @@
             padding: 15px;
             border-radius: 8px;
         }
+        .control-item select {
+            width: 100%;
+            padding: 8px;
+            background: rgba(0,0,0,0.4); color: white; border: 1px solid var(--glass-border); border-radius: 5px;
+        }
         .control-item label {
             display: block;
             margin-bottom: 10px;
@@ -59,6 +64,10 @@
             color: white;
             cursor: pointer;
             border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        .control-item button:hover {
+            background-color: #c00;
         }
         .status-light {
             width: 15px;
@@ -74,6 +83,9 @@
             70% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
             100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
         }
+        .link-button {
+            background-color: #007bff;
+        }
     </style>
 </head>
 <body>
@@ -83,7 +95,7 @@
         <div class="panel">
             <h2>الحالة العامة للنظام</h2>
             <p><span class="status-light"></span>النظام يعمل بشكل طبيعي</p>
-            <p><strong>إصدار الواجهة:</strong> 4.0 (Autonomous)</p>
+            <p><strong>إصدار الواجهة:</strong> 5.0 (Voice & Control)</p>
             <p><strong>آخر فحص ذاتي:</strong> <span id="last-check">منذ ثوانٍ</span></p>
         </div>
 
@@ -104,7 +116,36 @@
                 </div>
             </div>
         </div>
-         <a href="index.html" style="color: #aaa; margin-top: 20px; display:inline-block;">تسجيل الخروج</a>
+
+        <div class="panel">
+            <h2>إعدادات النظام</h2>
+            <div class="panel-grid">
+                <div class="control-item">
+                    <label for="sound-status">حالة الأصوات</label>
+                    <select id="sound-status"><option>مفعل</option><option>معطل</option></select>
+                </div>
+                <div class="control-item">
+                    <label for="default-theme">الوضع الافتراضي</label>
+                    <select id="default-theme"><option>تلقائي</option><option>ليلي</option><option>نهاري</option></select>
+                </div>
+                <div class="control-item">
+                    <label>إدارة شريط الميزات</label>
+                    <button onclick="alert('سيتم فتح واجهة إدارة الشريط (محاكاة).')">Manage Feature Bar</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>نشاط الذكاء الاصطناعي</h2>
+             <div class="panel-grid">
+                <div class="control-item">
+                    <label>مراجعة سجلات النشاط</label>
+                    <button class="link-button" onclick="window.open('ai_panel.html', '_blank')">Open AI Activity Log</button>
+                </div>
+            </div>
+        </div>
+
+         <a href="index.html" style="color: #aaa; margin-top: 20px; display:inline-block;">العودة إلى الشات</a>
     </div>
 </body>
 </html>

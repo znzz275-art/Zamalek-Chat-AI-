@@ -7,9 +7,10 @@
     <link rel="icon" href="https://upload.wikimedia.org/wikipedia/fr/0/04/ZamalekSC.png" type="image/png">
     <style>
         /*
-        * 🧠 Zamalek Chat AI Vision - Prompt-Generated System 🧠
-        * Design: Glassmorphism, Dark Mode
-        * Colors: #0d0d0d, #e41e26, #f5f5f5
+        * 🧠 Zamalek Chat AI Vision - Core System Update 🧠
+        * Version: 6.0 (Self-Evolving Core)
+        * Design: Glassmorphism, Auto Day/Night Mode
+        * Colors: #0d0d0d, #e41e26, #f5f5f5 (Dark) / #f0f2f5, #333 (Light)
         */
         :root {
             --bg-color: #0d0d0d;
@@ -19,6 +20,15 @@
             --glass-border: rgba(255, 255, 255, 0.1);
             --shadow-color: rgba(0, 0, 0, 0.3);
             --border-radius: 16px;
+            --header-height: 55px;
+        }
+
+        html[data-theme='light'] {
+            --bg-color: #f0f2f5;
+            --text-color: #1c1e21;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(0, 0, 0, 0.1);
+            --shadow-color: rgba(0, 0, 0, 0.1);
         }
 
         body {
@@ -75,7 +85,8 @@
         }
 
         .chat-header {
-            padding: 8px 15px; /* Reduced height */
+            height: var(--header-height);
+            padding: 0 15px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -110,17 +121,24 @@
         .header-button:active {
             transform: scale(0.9);
         }
+        #fullscreen-btn {
+            display: none; /* Hidden by default, enabled by experimental feature */
+        }
+        body:fullscreen .chat-container, body:-webkit-full-screen .chat-container {
+            border-radius: 0;
+            transform: scale(0.9);
+        }
 
         /* Settings Dropdown */
         .settings-dropdown {
             position: absolute;
-            top: 50px;
+            top: calc(var(--header-height) + 5px);
             right: 10px;
             background: var(--glass-bg);
             backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
             border-radius: 10px;
-            box-shadow: 0 4px 20px var(--shadow-color);
+            box-shadow: 0 8px 20px var(--shadow-color);
             z-index: 100;
             width: 220px;
             padding: 10px;
@@ -137,8 +155,23 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 5px;
+            padding: 10px 5px;
             font-size: 0.9em;
+        }
+        .settings-item select {
+            background: var(--glass-bg);
+            color: var(--text-color);
+            border: 1px solid var(--glass-border);
+            border-radius: 5px;
+            padding: 4px;
+        }
+        .settings-item button {
+            width: 100%;
+            background: var(--primary-red);
+            color: white;
+            border: none;
+            padding: 8px;
+            border-radius: 5px;
         }
 
         /* Toggle Switch */
@@ -171,7 +204,7 @@
 
         .chat-box {
             flex-grow: 1;
-            padding: 20px 10px;
+            padding: 15px 10px;
             overflow-y: scroll;
             display: flex;
             flex-direction: column;
@@ -215,6 +248,26 @@
             align-self: flex-start;
             border-bottom-left-radius: 4px;
             white-space: pre-wrap;
+        }
+        .ai-message .replay-audio-btn {
+            position: absolute;
+            bottom: 5px;
+            left: 10px; /* RTL support */
+            cursor: pointer;
+            font-size: 0.8em;
+            opacity: 0.5;
+        }
+        .audio-message {
+            background-color: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            align-self: flex-end; /* Sent by user */
+            border-bottom-right-radius: 4px;
+            padding: 10px;
+            width: 250px;
+        }
+        .audio-message audio {
+            width: 100%;
+            filter: invert(1) sepia(1) saturate(5) hue-rotate(320deg);
         }
 
         .ai-message img {
@@ -295,6 +348,11 @@
             display: none; /* Hidden by default */
             background: var(--glass-bg);
         }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
 
         .chat-notification {
             align-self: center;
@@ -308,14 +366,38 @@
 
         .input-area {
             display: flex;
-            padding: 15px;
+            padding: 10px 15px;
             gap: 10px;
             align-items: center;
             border-top: 1px solid var(--glass-border);
             background: var(--glass-bg);
         }
 
-        .input-area input {
+        .control-buttons {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .control-buttons .icon-button {
+            font-size: 1.2em;
+            width: 40px;
+            height: 40px;
+        }
+        .control-buttons .icon-button.active {
+            background-color: var(--primary-red);
+        }
+        #mic-button.recording-fares { animation: pulse-blue 1.5s infinite; }
+        #mic-button.recording-medhat { animation: pulse-red 1.5s infinite; }
+        #mic-button.recording-raouf { animation: pulse-green 1.5s infinite; }
+        #mic-button.recording-default { animation: pulse 1s infinite; }
+        @keyframes pulse-blue { 0%, 100% { box-shadow: 0 0 15px #0af; } 50% { box-shadow: 0 0 25px #0af; } }
+        @keyframes pulse-red { 0%, 100% { box-shadow: 0 0 15px var(--primary-red); } 50% { box-shadow: 0 0 25px var(--primary-red); } }
+        @keyframes pulse-green { 0%, 100% { box-shadow: 0 0 15px #0f0; } 50% { box-shadow: 0 0 25px #0f0; } }
+
+
+
+        #user-input {
             flex-grow: 1;
             padding: 10px 18px;
             border: 1px solid var(--glass-border);
@@ -326,7 +408,7 @@
             color: var(--text-color);
         }
 
-        .input-area input::placeholder {
+        #user-input::placeholder {
             color: #888;
         }
 
@@ -355,6 +437,9 @@
 
         .send-button {
             background-color: var(--primary-red);
+            color: #fff;
+        }
+        html[data-theme='light'] .send-button {
             color: #fff;
         }
 
@@ -411,6 +496,269 @@
             z-index: 200;
             transition: top 0.4s ease-out;
         }
+
+        /* Modal & Sidebar Styles */
+        .modal-backdrop {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.6);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-backdrop.visible {
+            display: flex;
+        }
+        .modal-backdrop.closing .modal-card, .modal-backdrop.closing .sidebar {
+            animation: modal-fade-out 0.3s ease-out forwards;
+        }
+
+        .modal-card {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--border-radius);
+            padding: 0; /* Remove padding to allow iframe to fill space */
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 8px 32px 0 var(--shadow-color);
+            animation: modal-slide-up 0.4s ease-out;
+        }
+        @keyframes modal-slide-up {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        @keyframes modal-fade-out {
+            from { opacity: 1; transform: scale(1); }
+            to { opacity: 0; transform: scale(0.95); }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 10px 20px 10px 20px;
+            border-bottom: 1px solid var(--glass-border);
+        }
+        .modal-header h3 { margin: 0; }
+        .modal-close-btn { font-size: 1.5em; cursor: pointer; }
+        .modal-body .settings-item { padding: 15px 5px; }
+        .modal-body .settings-item input[type="range"] { width: 60%; }
+        .experimental-feature {
+            border-bottom: 1px solid var(--glass-border);
+            padding: 15px 5px;
+        }
+        .experimental-feature:last-child {
+            border-bottom: none;
+        }
+        .experimental-feature-header { display: flex; justify-content: space-between; align-items: center; }
+        .experimental-feature p { font-size: 0.8em; color: #ccc; margin: 5px 0 0 0; }
+        .no-features {
+            text-align: center; 
+            padding: 20px;
+            color: #aaa;
+        }
+        .modal-body .settings-item button {
+            text-align: center;
+            padding: 20px;
+            color: #aaa;
+        }
+        .modal-body .settings-item button {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            cursor: pointer;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            right: -100%; /* Start off-screen */
+            width: 320px;
+            height: 100%;
+            background: var(--glass-bg);
+            backdrop-filter: blur(15px);
+            border-left: 1px solid var(--glass-border);
+            z-index: 1010;
+            transition: right 0.4s ease-in-out;
+            display: flex;
+            flex-direction: column; 
+        }
+        .sidebar.visible {
+            right: 0;
+        }
+        .sidebar-header {
+            padding: 0 15px;
+            height: var(--header-height);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--glass-border);
+            flex-shrink: 0;
+        }
+        .sidebar-body {
+            padding: 15px;
+            overflow-y: auto;
+        }
+        .news-card {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            background: rgba(0,0,0,0.1);
+            padding: 10px;
+            border-radius: 10px;
+        }
+        .news-card img {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+        .news-card-content h4 {
+            margin: 0 0 5px 0;
+            font-size: 0.9em;
+        }
+        .news-card-content p {
+            margin: 0;
+            font-size: 0.8em;
+            color: #ccc;
+        }
+        html[data-theme='light'] .news-card-content p {
+            color: #555;
+        }
+        .status-indicator {
+            position: relative;
+            padding-left: 20px;
+        }
+        .status-indicator::before {
+            content: '';
+            position: absolute;
+            left: 0; top: 50%; transform: translateY(-50%);
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background-color: #28a745; /* Green for online */
+        }
+        .smart-sidebar-item {
+            padding: 10px;
+            border-bottom: 1px solid var(--glass-border);
+            cursor: pointer;
+        }
+
+        /* Zamalek Browser Styles */
+        #browser-modal {
+            /* Rebuilt for true full-screen experience */
+            width: 100vw;
+            height: 100vh;
+            max-width: 100%;
+            border-radius: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Ensure content stays within rounded corners */
+        }
+        .browser-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 15px;
+            background: rgba(0,0,0,0.3);
+            flex-shrink: 0;
+        }
+        .browser-controls button {
+            background: none; border: none; color: var(--text-color); font-size: 1.2em; cursor: pointer;
+        }
+        #browser-mic-btn.recording {
+            color: var(--primary-red);
+        }
+        #browser-url {
+            flex-grow: 1;
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: 1px solid var(--glass-border);
+            background: rgba(0,0,0,0.2);
+            color: var(--text-color);
+        }
+        #browser-frame {
+            flex-grow: 1;
+            border: none;
+            background: #fff; /* Default background for loading pages */
+            transition: transform 0.2s ease-out; /* For smooth zooming */
+        }
+        .browser-tabs {
+            display: flex;
+            background: rgba(0,0,0,0.2);
+            padding: 5px 5px 0 5px;
+            gap: 5px;
+            overflow-x: auto;
+            flex-shrink: 0;
+        }
+        .browser-tab {
+            padding: 8px 15px;
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-bottom: none;
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            font-size: 0.8em;
+            white-space: nowrap;
+        }
+        .browser-tab.active {
+            background: rgba(0,0,0,0.3);
+            border-color: var(--primary-red);
+        }
+
+        /* Browser Homepage */
+        .browser-homepage {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            background: var(--bg-color);
+            color: var(--text-color);
+            text-align: center;
+        }
+        .browser-homepage .logo {
+            width: 80px;
+            margin-bottom: 20px;
+        }
+        .browser-homepage h2 {
+            font-size: 1.5em;
+            color: var(--primary-red);
+            border: none;
+        }
+        .browser-homepage .search-box {
+            width: 80%;
+            max-width: 500px;
+            padding: 12px 20px;
+            border-radius: 25px;
+            border: 1px solid var(--glass-border);
+            background: var(--glass-bg);
+            font-size: 1em;
+            color: var(--text-color);
+        }
+
+        /* Commentator Indicator */
+        #commentator-indicator {
+            position: absolute;
+            bottom: 65px; /* Above input area */
+            left: 15px;
+            font-size: 0.7em;
+            color: #888;
+            background: var(--glass-bg);
+            padding: 2px 8px;
+            border-radius: 5px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
     </style>
 </head>
 <body>
@@ -434,27 +782,35 @@
             </svg>
             <span>Zamalek Chat AI Vision</span>
         </div>
+        <button id="fullscreen-btn" class="header-button" title="وضع ملء الشاشة">⛶</button>
         <button id="settings-button" class="header-button">⚙️</button>
         <div id="settings-dropdown" class="settings-dropdown">
-            <div class="settings-item"><span>الوضع الليلي</span><label class="switch"><input type="checkbox" id="dark-mode-toggle" checked><span class="slider"></span></label></div>
+            <div class="settings-item"><span>المظهر</span><select id="theme-select"><option value="auto">تلقائي</option><option value="dark">ليلي</option><option value="light">نهاري</option></select></div>
             <div class="settings-item"><span>صوت الردود</span><label class="switch"><input type="checkbox" id="sound-toggle"><span class="slider"></span></label></div>
-            <div class="settings-item"><span>تحديث تلقائي</span><label class="switch"><input type="checkbox" id="autoupdate-toggle" checked><span class="slider"></span></label></div>
+            <div class="settings-item"><span>صوت المعلّق</span><select id="commentator-select"><option value="auto">تلقائي</option><option value="fares">فارس عوض</option><option value="essam">عصام الشوالي</option><option value="raouf">رؤوف خليف</option><option value="medhat">مدحت شلبي</option></select></div>
+            <div class="settings-item" style="margin-top: 10px;"><button id="clear-chat-button">مسح المحادثة</button></div>
         </div>
     </div>
     
     <div class="chat-box" id="chat-box">
         <!-- Messages will be appended here by JavaScript -->
         <div id="typing-indicator" class="typing-indicator">الذكاء الاصطناعي يكتب الآن...</div>
+        <div id="commentator-indicator"></div>
     </div>
     
     <div class="input-area">
-        <button id="mic-button" class="icon-button" title="تحدث الآن" onclick="handleMicClick()">
-            🎤
-        </button>
+        <div class="control-buttons">
+            <button id="btn-sound" class="icon-button btn-sound" title="إعدادات الصوت">🔈</button>
+            <button id="btn-mode" class="icon-button btn-mode" title="تبديل الوضع">🌗</button>
+            <button id="btn-news" class="icon-button btn-news" title="الأخبار">📰</button>
+            <button id="btn-settings" class="icon-button btn-settings" title="إعدادات سريعة">⚙️</button>
+            <button id="btn-ai" class="icon-button btn-ai" title="حالة الذكاء الاصطناعي">🧠</button>
+            <button id="btn-experimental" class="icon-button btn-experimental" title="تجارب AI الجديدة">🎮</button>
+            <button id="btn-browser" class="icon-button btn-browser" title="متصفح الزمالك">🌐</button>
+        </div>
+        <button id="mic-button" class="icon-button" title="تحدث الآن" onclick="handleMicClick()">🎤</button>
         <input type="text" id="user-input" placeholder="اسأل عن الزمالك، النتائج، أو اطلب فيديو..." onkeydown="if(event.key === 'Enter') sendMessage()">
-        <button class="icon-button send-button" onclick="sendMessage()">
-            ➤
-        </button>
+        <button class="icon-button send-button" onclick="sendMessage()">➤</button>
     </div>
 </div>
 
@@ -462,17 +818,96 @@
 <div id="video-modal" class="video-modal">
     <span id="close-modal" class="close-modal">&times;</span>
     <div class="video-modal-content" id="video-modal-content">
-        <!-- Iframe will be injected here -->
     </div>
 </div>
 
+<!-- Modals & Sidebars -->
+<div id="modal-backdrop" class="modal-backdrop">
+    <!-- Sound Settings Modal -->
+    <div id="sound-modal" class="modal-card" style="display: none;">
+        <div class="modal-header">
+            <h3>إعدادات الصوت</h3>
+            <span class="modal-close-btn">✖️</span>
+        </div>
+        <div class="modal-body">
+            <div class="settings-item"><span>تفعيل الصوت</span><label class="switch"><input type="checkbox" id="modal-sound-toggle"><span class="slider"></span></label></div>
+            <div class="settings-item"><span>المعلّق</span><select id="modal-commentator-select"><option value="auto">تلقائي</option><option value="fares">فارس عوض</option><option value="essam">عصام الشوالي</option><option value="raouf">رؤوف خليف</option><option value="medhat">مدحت شلبي</option></select></div>
+            <div class="settings-item"><span>مستوى الصوت</span><input type="range" id="volume-slider" min="0" max="1" step="0.1" value="1"></div>
+            <div class="settings-item"><span>سرعة النطق</span><input type="range" id="rate-slider" min="0.5" max="2" step="0.1" value="1"></div>
+            <div class="settings-item"><button id="test-sound-btn">اختبار الصوت</button></div>
+        </div>
+    </div>
+
+    <!-- Quick Settings Modal -->
+    <div id="quick-settings-modal" class="modal-card" style="display: none;">
+        <div class="modal-header">
+            <h3>الإعدادات السريعة</h3>
+            <span class="modal-close-btn">✖️</span>
+        </div>
+        <div class="modal-body">
+            <div class="settings-item"><span>الوضع التلقائي</span><label class="switch"><input type="checkbox" id="auto-theme-toggle"><span class="slider"></span></label></div>
+            <div class="settings-item"><span>الصوت التلقائي</span><label class="switch"><input type="checkbox" id="auto-sound-toggle"><span class="slider"></span></label></div>
+            <div class="settings-item"><span>حالة الاتصال</span><span id="connection-status" class="status-indicator">متصل</span></div>
+        </div>
+    </div>
+
+    <!-- AI Status Modal -->
+    <div id="ai-status-modal" class="modal-card" style="display: none;">
+        <div class="modal-header">
+            <h3>🧠 حالة الذكاء الاصطناعي</h3>
+            <span class="modal-close-btn">✖️</span>
+        </div>
+        <div class="modal-body">
+            <p><strong>مستوى التحليل:</strong> <span id="ai-level">متقدم</span></p>
+            <p><strong>آخر تعديل ذاتي:</strong> <span id="ai-last-update">منذ 5 دقائق (تحسين استجابة)</span></p>
+            <button id="force-update-btn" style="width:100%; padding:10px; margin-top:15px; background:var(--primary-red); color:white; border:none; border-radius:5px;">تحديث ذاتي الآن</button>
+        </div>
+    </div>
+
+    <!-- Experimental Features Modal -->
+    <div id="experimental-modal" class="modal-card" style="display: none;">
+        <div class="modal-header">
+            <h3>🎮 تجارب الذكاء الاصطناعي</h3>
+            <span class="modal-close-btn">✖️</span>
+        </div>
+        <div id="experimental-features-body" class="modal-body">
+            <!-- Features will be injected by JS -->
+        </div>
+    </div>
+
+    <!-- Zamalek Browser Modal -->
+    <div id="browser-modal" class="modal-card" style="display: none;">
+        <div class="browser-controls">
+            <button id="browser-back">‹</button>
+            <button id="browser-forward">›</button>
+            <input type="text" id="browser-url" placeholder="ابحث في Google أو أدخل رابط...">
+            <button id="browser-mic-btn" title="بحث صوتي">🎤</button>
+            <button id="browser-go">Go</button>
+            <div style="flex-grow: 1;"></div> <!-- Spacer -->
+            <button id="browser-zoom-out" title="تصغير" style="font-size: 1em;">🔍−</button>
+            <button id="browser-zoom-in" title="تكبير" style="font-size: 1em;">🔍+</button>
+            <span class="modal-close-btn">✖️</span>
+        </div>
+        <div class="browser-tabs" id="browser-tabs"></div>
+        <iframe id="browser-frame"></iframe>
+    </div>
+
+</div>
+
+<!-- Smart Sidebar -->
+<div id="smart-sidebar" class="sidebar">
+    <div class="sidebar-header">
+        <h3>🚀 الشريط الذكي</h3>
+        <span class="modal-close-btn">✖️</span>
+    </div>
+    <div id="smart-sidebar-body" class="sidebar-body"></div>
+</div>
+
 <script>
-    // **********************************************
     // 🔑 مفتاح Google Gemini API 
-    // لا تقم بتغيير هذا المفتاح
-    const GEMINI_API_KEY = 'AIzaSyA7xBwY2OqT1pI_YmWNLPoCRf5JUaEmGJ4'; // لا تقم بتغيير هذا المفتاح
+    // This is a client-side obfuscation. In a real production app, this key should be on a server proxy.
+    const GEMINI_API_KEY = atob('QUl6YVN5QTd4QndZMk9xVDFwSV9ZbVdOTFBvQ1JmNUpVYUVtR0o0'); // Decodes at runtime
     const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-    // **********************************************
 
     // --- DOM Elements ---
     const chatBox = document.getElementById('chat-box');
@@ -485,10 +920,36 @@
     const closeModal = document.getElementById('close-modal');
     const videoModalContent = document.getElementById('video-modal-content');
     const soundToggle = document.getElementById('sound-toggle');
-    const autoUpdateToggle = document.getElementById('autoupdate-toggle');
+    const themeSelect = document.getElementById('theme-select');
+    const commentatorSelect = document.getElementById('commentator-select');
+    const clearChatButton = document.getElementById('clear-chat-button');
+
+    // --- New UI Elements ---
+    const btnSound = document.getElementById('btn-sound');
+    const btnMode = document.getElementById('btn-mode');
+    const btnNews = document.getElementById('btn-news');
+    const btnSettings = document.getElementById('btn-settings');
+    const btnAI = document.getElementById('btn-ai');
+    const btnBrowser = document.getElementById('btn-browser');
+    const btnExperimental = document.getElementById('btn-experimental');
+    const modalBackdrop = document.getElementById('modal-backdrop');
+    const soundModal = document.getElementById('sound-modal');
+    const quickSettingsModal = document.getElementById('quick-settings-modal');
+    const aiStatusModal = document.getElementById('ai-status-modal');
+    const smartSidebar = document.getElementById('smart-sidebar');
+    const fullscreenBtn = document.getElementById('fullscreen-btn');
+    const modalSoundToggle = document.getElementById('modal-sound-toggle');
+    const experimentalModal = document.getElementById('experimental-modal');
+    const modalCommentatorSelect = document.getElementById('modal-commentator-select');
+    const volumeSlider = document.getElementById('volume-slider');
+    let activeModal = null;
 
     // --- State ---
     let selfUpdateInterval;
+    let isOnline = true;
+    let browserTabs = [];
+    let activeBrowserTabIndex = -1;
+    let browserZoomLevel = 1.0;
 
     // --- Initial Prompt & Conversation History ---
     let conversationHistory = [
@@ -514,15 +975,17 @@
     
     // --- Initialization ---
     document.addEventListener('DOMContentLoaded', () => {
+        loadSettings();
+        initializeTheme();
         const welcomeText = conversationHistory.find(m => m.role === 'model').parts[0].text;
         appendMessage(welcomeText, 'ai');
         chatBox.scrollTop = chatBox.scrollHeight;
         setupEventListeners();
-        selfUpdateSystem(); // Start self-update
-        selfHealingCheck(); // Start self-healing check
+        initializeAutonomousSystems();
+        showTopNotification("✅ تم تفعيل جميع الأنظمة بنجاح: الصوت – المايك – المتصفح – المزايا التجريبية.");
     });
 
-    // --- Event Listeners Setup ---
+    // --- Setup Functions ---
     function setupEventListeners() {
         settingsButton.addEventListener('click', (e) => {
             e.stopPropagation();
@@ -540,13 +1003,126 @@
             videoModalContent.innerHTML = '';
         });
 
-        autoUpdateToggle.addEventListener('change', () => {
-            if (autoUpdateToggle.checked) {
-                selfUpdateSystem();
-            } else {
-                clearInterval(selfUpdateInterval);
+        themeSelect.addEventListener('change', () => handleThemeChange(themeSelect.value));
+
+        soundToggle.addEventListener('change', () => {
+            modalSoundToggle.checked = soundToggle.checked;
+            saveSettings();
+        });
+
+        clearChatButton.addEventListener('click', () => {
+            clearChat();
+            settingsDropdown.style.display = 'none';
+        });
+
+        // --- New Button Listeners ---
+        btnSound.addEventListener('click', () => openModal(soundModal));
+        btnMode.addEventListener('click', toggleTheme);
+        btnNews.addEventListener('click', () => { // This button now opens the smart sidebar
+            smartSidebar.classList.add('visible');
+            modalBackdrop.classList.add('visible');
+            activeModal = smartSidebar;
+        });
+        btnSettings.addEventListener('click', () => openModal(quickSettingsModal));
+        btnExperimental.addEventListener('click', () => {
+            renderExperimentalFeatures();
+            openModal(experimentalModal);
+        });
+        btnBrowser.addEventListener('click', () => openModal(document.getElementById('browser-modal')));
+        btnAI.addEventListener('click', () => {
+            renderSmartSidebar(); // Also show smart features here
+            openModal(aiStatusModal);
+        });
+
+        // Modal/Sidebar Closing
+        modalBackdrop.addEventListener('click', (e) => {
+            if (e.target === modalBackdrop) {
+                closeActiveModal();
             }
         });
+        document.querySelectorAll('.modal-close-btn').forEach(btn => {
+            btn.addEventListener('click', closeActiveModal);
+        });
+        document.addEventListener('keydown', (e) => {
+            if (e.key === "Escape" && activeModal) {
+                closeActiveModal();
+            }
+        });
+
+
+        // Sound Modal Controls
+        modalSoundToggle.addEventListener('change', () => {
+            soundToggle.checked = modalSoundToggle.checked;
+            if (!soundToggle.checked) speechSynthesis.cancel();
+            saveSettings();
+        });
+        modalCommentatorSelect.addEventListener('change', () => {
+            commentatorSelect.value = modalCommentatorSelect.value;
+            saveSettings();
+        });
+        volumeSlider.addEventListener('input', () => saveSettings());
+        document.getElementById('rate-slider').addEventListener('input', () => saveSettings());
+        document.getElementById('test-sound-btn').addEventListener('click', () => {
+            speak("هذا هو صوت المعلق المختار.", true);
+        });
+
+        // Force AI update button
+        document.getElementById('force-update-btn').addEventListener('click', () => {
+            showTopNotification("🧠... جاري فرض تحديث ذاتي");
+            closeActiveModal();
+            setTimeout(() => {
+                appendNotification("✅ تم تنفيذ التحديث الذاتي بنجاح.");
+            }, 1500);
+        });
+
+        // Sync settings from main dropdown to modals
+        soundToggle.addEventListener('change', () => modalSoundToggle.checked = soundToggle.checked);
+        commentatorSelect.addEventListener('change', () => modalCommentatorSelect.value = commentatorSelect.value);
+        themeSelect.addEventListener('change', () => {
+            document.getElementById('auto-theme-toggle').checked = (themeSelect.value === 'auto');
+        });
+
+        // Fullscreen button
+        fullscreenBtn.addEventListener('click', toggleFullScreen);
+
+        // Browser Controls
+        const browserFrame = document.getElementById('browser-frame');
+        const browserUrl = document.getElementById('browser-url');
+        document.getElementById('browser-go').addEventListener('click', navigateBrowser);
+        document.getElementById('browser-mic-btn').addEventListener('click', startBrowserVoiceSearch);
+        document.getElementById('browser-zoom-in').addEventListener('click', () => zoomBrowser(0.1));
+        document.getElementById('browser-zoom-out').addEventListener('click', () => zoomBrowser(-0.1));
+        browserUrl.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigateBrowser(e.target.value); });
+        document.getElementById('browser-back').addEventListener('click', () => browserFrame.contentWindow.history.back());
+        document.getElementById('browser-forward').addEventListener('click', () => browserFrame.contentWindow.history.forward());
+        document.getElementById('browser-modal').addEventListener('click', (e) => {
+            if (e.target.classList.contains('browser-homepage-search')) {
+                navigateBrowser(e.target.value);
+            }
+        })
+
+        function navigateBrowser() {
+            let url = typeof query === 'string' ? query : browserUrl.value.trim();
+            if (!url) return;
+            // Simple check if it's a URL or a search query
+            if (!url.startsWith('http://') && !url.startsWith('https://') && url.includes('.')) {
+                url = 'https://' + url;
+            } else if (!url.includes('.')) {
+                url = `https://www.google.com/search?q=${encodeURIComponent(url)}`;
+            }
+            updateActiveTab(url);
+        }
+    }
+
+    function initializeAutonomousSystems() {
+        console.log("[System] Initializing Autonomous AI Systems...");
+        autoReasoningLayer();
+        checkInternetConnection();
+        // Initial news fetch
+        renderSmartSidebar();
+        // Set update interval
+        selfEvolutionCheck(); // Start checking for new features
+        console.log("[System] All autonomous systems are online.");
     }
 
     // --- Speech-to-Text ---
@@ -558,13 +1134,22 @@
         recognition.interimResults = false;
 
         recognition.onstart = () => {
-            micButton.style.color = 'var(--primary-red)';
+            const commentator = commentatorSelect.value === 'auto' ? 'default' : commentatorSelect.value;
+            micButton.blur(); // Remove focus
+            micButton.className = 'icon-button'; // Reset classes
+            micButton.classList.add(`recording-${commentator}`);
             micButton.textContent = '🔴';
         };
 
         recognition.onresult = (event) => {
             const transcript = event.results[0][0].transcript;
             userInput.value = transcript;
+            // Simulate sending a voice message for playback
+            const audioBlob = new Blob([], { type: 'audio/webm' }); // Dummy blob
+            const audioUrl = URL.createObjectURL(audioBlob);
+            appendAudioMessage(audioUrl);
+            speak("تم استلام الصوت", true);
+            // In a real app, you'd send the transcript to the AI
             sendMessage();
         };
 
@@ -572,6 +1157,7 @@
 
         recognition.onend = () => {
             micButton.style.color = 'var(--text-color)';
+            micButton.className = 'icon-button'; // Reset classes
             micButton.textContent = '🎤';
             recognition.recognizing = false;
         };
@@ -580,7 +1166,7 @@
             if (recognition.recognizing) return;
             recognition.start();
         };
-
+        micButton.style.display = 'flex';
     } else {
         micButton.style.display = 'none';
     }
@@ -592,7 +1178,13 @@
 
         if (sender === 'ai') {
             messageDiv.classList.add('ai-message');
-            messageDiv.innerHTML = parseContent(content);
+            // Add a replay button
+            const replayBtn = document.createElement('span');
+            replayBtn.className = 'replay-audio-btn';
+            replayBtn.innerHTML = '🔊';
+            replayBtn.onclick = () => speak(content);
+            messageDiv.appendChild(replayBtn);
+            messageDiv.innerHTML = parseAIContent(content);
         } else {
             messageDiv.classList.add('user-message');
             messageDiv.innerHTML = content;
@@ -600,6 +1192,17 @@
 
         chatBox.insertBefore(messageDiv, typingIndicator);
         chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function appendAudioMessage(audioSrc) {
+        const messageDiv = document.createElement('div');
+        messageDiv.classList.add('message', 'audio-message');
+        messageDiv.innerHTML = `
+            <audio controls>
+                <source src="${audioSrc}" type="audio/webm">
+                متصفحك لا يدعم عنصر الصوت.
+            </audio>`;
+        chatBox.insertBefore(messageDiv, typingIndicator);
     }
 
     function appendNotification(text) {
@@ -610,7 +1213,7 @@
         chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    function parseContent(text) {
+    function parseAIContent(text) {
         // 1. Check for <match_result> tag
         const matchResultMatch = text.match(/<match_result>([\s\S]*?)<\/match_result>/);
         if (matchResultMatch && matchResultMatch[1]) {
@@ -662,7 +1265,7 @@
     }
 
     // --- Core AI Function ---
-    async function sendMessage() { 
+    async function sendMessage(isAutoTrigger = false) { 
         const userText = userInput.value.trim();
         if (userText === '') return;
 
@@ -670,7 +1273,7 @@
         conversationHistory.push({ role: "user", parts: [{text: userText}] });
         userInput.value = '';
         
-        typingIndicator.style.display = 'flex';
+        if (!isAutoTrigger) typingIndicator.style.display = 'flex';
         chatBox.scrollTop = chatBox.scrollHeight; 
 
         const controller = new AbortController();
@@ -705,12 +1308,9 @@
 
             appendMessage(aiText, 'ai');
             
-            if (soundToggle.checked) {
-                speak(aiText);
-            }
-            
             conversationHistory.push({ role: "model", parts: [{text: aiText}] });
-
+            if (soundToggle.checked) speak(aiText);
+            
         } catch (error) {
             console.error('Error sending message:', error);
             let errorMessage = "حدث خطأ غير متوقع. يرجى التحقق من اتصالك بالإنترنت.";
@@ -719,7 +1319,7 @@
             }
             appendMessage(errorMessage, 'ai');
         } finally {
-            typingIndicator.style.display = 'none'; 
+            if (!isAutoTrigger) typingIndicator.style.display = 'none'; 
         }
     }
 
@@ -734,53 +1334,378 @@
         videoModal.style.display = 'block';
     }
 
-    function speak(text) {
+    function speak(text, isNotification = false) {
+        if (!soundToggle.checked) return;
+        speechSynthesis.cancel(); // Stop any previous speech
+        const indicator = document.getElementById('commentator-indicator');
+
         // Clean text for speech
         const cleanText = text.replace(/<[^>]*>/g, " ").replace(/\*\*/g, "");
         const utterance = new SpeechSynthesisUtterance(cleanText);
-        utterance.lang = 'ar-EG';
+        
+        // Detect language for proper synthesis
+        const hasArabic = /[\u0600-\u06FF]/.test(cleanText);
+        utterance.lang = hasArabic ? 'ar-SA' : 'en-US';
+
+        utterance.volume = parseFloat(volumeSlider.value);
+        utterance.rate = parseFloat(document.getElementById('rate-slider').value);
+
+        let selectedCommentator = commentatorSelect.value;
+        if (selectedCommentator === 'auto' && !isNotification) {
+            selectedCommentator = text.includes('نتيجة') || text.includes('مباراة') ? 'medhat' : 'fares'; // Default to Fares for general chat
+        } else if (isNotification) {
+            selectedCommentator = 'notification';
+        }
+
+        // Simulate commentator styles by adjusting pitch and rate
+        switch(selectedCommentator) {
+            case 'medhat': utterance.pitch = 1.3; utterance.rate = 1.1; break; // Medhat Shalaby
+            case 'fares': utterance.pitch = 0.9; utterance.rate = 1.2; break; // Fares Awad
+            case 'essam': utterance.pitch = 1.1; utterance.rate = 1.0; break; // Essam El Shawaly (same as raouf for simulation)
+            case 'raouf': utterance.pitch = 0.8; utterance.rate = 1.1; break; // Raouf Khalif
+            case 'notification': utterance.pitch = 1.2; utterance.rate = 1.1; break; // Formal, quick
+            default: utterance.pitch = 1.0; utterance.rate = 1.0;
+        }
+
+        utterance.onstart = () => {
+            indicator.textContent = `🎤 يتحدث: ${selectedCommentator}`;
+            indicator.style.opacity = 1;
+        };
+        utterance.onend = () => {
+            indicator.style.opacity = 0;
+        };
+
         speechSynthesis.speak(utterance);
     }
 
     function showTopNotification(message) {
         const banner = document.getElementById('top-notification');
+        if (!banner) return;
         banner.textContent = message;
         banner.style.top = '0';
         setTimeout(() => {
             banner.style.top = '-50px';
         }, 3000);
     }
-
-    // --- System Simulation Functions ---
-
-    function selfUpdateSystem() {
-        // Stop any existing interval to prevent duplicates
-        if (selfUpdateInterval) clearInterval(selfUpdateInterval);
-
-        // Simulate fetching data every 2 minutes
-        selfUpdateInterval = setInterval(() => {
-            if (!autoUpdateToggle.checked) return;
-
-            console.log("Simulating self-update...");
-            // In a real app, this would be an API call.
-            const updates = [
-                "⚽ تحديث جديد: فوز الزمالك 2-0 على الإسماعيلي!",
-                "📰 خبر عاجل: زيزو يجدد عقده مع القلعة البيضاء.",
-                "📊 إحصائية: شيكابالا يصل للهدف رقم 50 في الدوري."
-            ];
-            const randomUpdate = updates[Math.floor(Math.random() * updates.length)];
-            
-            appendNotification(randomUpdate);
-            showTopNotification("🔄 تم تحديث قاعدة البيانات بنجاح.");
-
-        }, 120000); // 2 minutes
+    
+    function clearChat() {
+        chatBox.innerHTML = ''; // Clear visually
+        conversationHistory = conversationHistory.slice(0, 2); // Reset history
+        const welcomeText = conversationHistory.find(m => m.role === 'model').parts[0].text;
+        appendMessage(welcomeText, 'ai'); // Add welcome message back
+        chatBox.appendChild(typingIndicator); // Add typing indicator back
+        showTopNotification("🗑️ تم مسح المحادثة.");
     }
 
-    function selfHealingCheck() {
+    // --- Theme Management ---
+    function initializeTheme() {
+        const savedTheme = localStorage.getItem('zamalekAI_theme') || 'auto';
+        themeSelect.value = savedTheme;
+        handleThemeChange(savedTheme);
+    }
+
+    function toggleTheme() {
+        const currentTheme = document.documentElement.getAttribute('data-theme');
+        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+        // Set main dropdown to manual mode
+        themeSelect.value = newTheme;
+        handleThemeChange(newTheme);
+    }
+
+
+    function handleThemeChange(theme) {
+        if (theme === 'auto') {
+            const hour = new Date().getHours();
+            const isDayTime = hour >= 6 && hour < 18;
+            document.documentElement.setAttribute('data-theme', isDayTime ? 'light' : 'dark');
+        } else {
+            document.documentElement.setAttribute('data-theme', theme);
+        }
+        // Update mode button icon
+        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+        btnMode.textContent = isDark ? '☀️' : '🌙';
+        saveSettings();
+    }
+
+    function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+            document.documentElement.requestFullscreen().catch(err => {
+                alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
+            });
+        } else {
+            if (document.exitFullscreen) {
+                document.exitFullscreen();
+            }
+        }
+    }
+
+    function zoomBrowser(amount) {
+        browserZoomLevel += amount;
+        if (browserZoomLevel < 0.5) browserZoomLevel = 0.5; // Minimum zoom
+        document.getElementById('browser-frame').style.transform = `scale(${browserZoomLevel})`;
+    }
+
+    // --- New Modal/Sidebar Functions ---
+    function openModal(modalElement) {
+        modalBackdrop.classList.add('visible');
+        modalElement.style.display = 'block';
+        activeModal = modalElement;
+    }
+
+    function closeActiveModal() {
+        if (!activeModal) return;
+
+        modalBackdrop.classList.add('closing');
+
+        setTimeout(() => {
+            modalBackdrop.classList.remove('visible', 'closing');
+            if (activeModal) {
+                if (activeModal.classList.contains('sidebar')) {
+                    activeModal.classList.remove('visible');
+                } else {
+                    activeModal.style.display = 'none';
+                }
+                activeModal = null;
+            }
+        }, 300); // Match animation duration
+    }
+
+    function renderExperimentalFeatures() {
+        const features = getExperimentalFeatures();
+        const container = document.getElementById('experimental-features-body');
+        container.innerHTML = ''; // Clear existing
+        if (features.length === 0) {
+            container.innerHTML = `<div class="no-features">لا توجد مزايا جديدة حاليًا، ترقّب التحديث القادم 👀</div>`;
+            return;
+        }
+
+        features.forEach(feature => {
+            const featureEl = document.createElement('div');
+            featureEl.className = 'experimental-feature';
+            featureEl.innerHTML = `
+                <div class="experimental-feature-header">
+                    <span>${feature.name}</span>
+                    <label class="switch">
+                        <input type="checkbox" data-feature-id="${feature.id}" ${feature.enabled ? 'checked' : ''}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <p>${feature.description}</p>
+            `;
+            container.appendChild(featureEl);
+            featureEl.querySelector('input').addEventListener('change', (e) => toggleExperimentalFeature(feature.id, e.target.checked));
+        });
+    }
+
+    // --- Browser Functions ---
+    function renderBrowserTabs() {
+        const tabsContainer = document.getElementById('browser-tabs');
+        const browserFrame = document.getElementById('browser-frame');
+        tabsContainer.innerHTML = '';
+        browserTabs.forEach((tab, index) => {
+            const tabEl = document.createElement('div');
+            tabEl.className = 'browser-tab' + (index === activeBrowserTabIndex ? ' active' : '');
+            tabEl.textContent = tab.title;
+            tabEl.onclick = () => setActiveTab(index);
+            tabsContainer.appendChild(tabEl);
+        });
+
+        if (activeBrowserTabIndex === -1 || browserTabs.length === 0) {
+            browserFrame.srcdoc = getBrowserHomepage();
+            document.getElementById('browser-url').value = '';
+        } else {
+            browserFrame.src = browserTabs[activeBrowserTabIndex].url;
+            document.getElementById('browser-url').value = browserTabs[activeBrowserTabIndex].url;
+        }
+    }
+
+    function getBrowserHomepage() {
+        return `
+            <html style="height: 100%;">
+            <body style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; background: var(--bg-color); color: var(--text-color); font-family: Arial, sans-serif; margin: 0;">
+                <img src="https://upload.wikimedia.org/wikipedia/fr/0/04/ZamalekSC.png" alt="Zamalek AI Logo" style="width: 80px; margin-bottom: 20px;">
+                <h2 style="font-size: 1.5em; color: var(--primary-red); border: none;">Zamalek AI Search Engine</h2>
+                <input type="text" class="browser-homepage-search" placeholder="...ابحث مع الذكاء الاصطناعي" style="width: 80%; max-width: 500px; padding: 12px 20px; border-radius: 25px; border: 1px solid var(--glass-border); background: var(--glass-bg); font-size: 1em; color: var(--text-color);">
+            </body>
+            </html>
+        `;
+    }
+
+    function createNewTab(url, title) {
+        const newTab = { url: url, title: title };
+        browserTabs.push(newTab);
+        setActiveTab(browserTabs.length - 1);
+    }
+
+    function setActiveTab(index) {
+        activeBrowserTabIndex = index;
+        renderBrowserTabs();
+    }
+
+    function updateActiveTab(url) {
+        if (activeBrowserTabIndex === -1) {
+            createNewTab(url, new URL(url).hostname);
+        } else {
+            browserTabs[activeBrowserTabIndex].url = url;
+            browserTabs[activeBrowserTabIndex].title = new URL(url).hostname;
+        }
+        renderBrowserTabs();
+    }
+
+    function startBrowserVoiceSearch() {
+        if (!recognition) {
+            alert("البحث الصوتي غير مدعوم في هذا المتصفح.");
+            return;
+        }
+        const browserMicBtn = document.getElementById('browser-mic-btn');
+        
+        recognition.onstart = () => {
+            browserMicBtn.classList.add('recording');
+        };
+
+        recognition.onresult = (event) => {
+            const transcript = event.results[0][0].transcript;
+            browserUrl.value = transcript;
+            // 1. Navigate the browser
+            navigateBrowser(transcript);
+            // 2. Ask AI to summarize and speak
+            userInput.value = `ابحث عن "${transcript}" وقدم لي ملخصًا صوتيًا للنتائج.`;
+            sendMessage(true); // Send to AI without showing user message
+        };
+
+        recognition.onend = () => {
+            browserMicBtn.classList.remove('recording');
+        };
+
+        recognition.start();
+    }
+
+    // --- Smart Sidebar ---
+    function getSmartSidebarFeatures() {
+        const defaults = [
+            { id: 'news', name: '📰 آخر الأخبار', action: () => { /* open news modal or view */ } },
+            { id: 'scores', name: '⚽ نتائج المباريات', action: () => { /* open scores */ } },
+        ];
+        const saved = JSON.parse(localStorage.getItem('zamalekAI_smart_sidebar') || '[]');
+        // Combine and remove duplicates
+        const all = [...defaults, ...saved];
+        return all.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))===i);
+    }
+
+    function renderSmartSidebar() {
+        const features = getSmartSidebarFeatures();
+        const container = document.getElementById('smart-sidebar-body');
+        container.innerHTML = '';
+        features.forEach(feature => {
+            const item = document.createElement('div');
+            item.className = 'smart-sidebar-item';
+            item.textContent = feature.name;
+            item.onclick = feature.action;
+            container.appendChild(item);
+        });
+    }
+
+    // --- Settings Persistence ---
+    function saveSettings() {
+        const settings = {
+            theme: themeSelect.value,
+            sound: soundToggle.checked,
+            commentator: commentatorSelect.value,
+            volume: volumeSlider.value,
+            rate: document.getElementById('rate-slider').value
+        };
+        localStorage.setItem('zamalekAI_settings', JSON.stringify(settings));
+    }
+
+    function loadSettings() {
+        const savedSettings = localStorage.getItem('zamalekAI_settings');
+        if (savedSettings) {
+            const settings = JSON.parse(savedSettings);
+            themeSelect.value = settings.theme || 'auto';
+            soundToggle.checked = settings.sound !== false; // default to true
+            commentatorSelect.value = settings.commentator || 'auto';
+            volumeSlider.value = settings.volume || 1;
+            document.getElementById('rate-slider').value = settings.rate || 1;
+
+            // Sync with other controls
+            modalSoundToggle.checked = soundToggle.checked;
+            modalCommentatorSelect.value = commentatorSelect.value;
+        } else {
+            // Default settings for first-time users
+            soundToggle.checked = true;
+            modalSoundToggle.checked = true;
+        }
+    }
+    
+    function getExperimentalFeatures() {
+        const defaults = [
+            { id: 'liveScoreTicker', name: 'شريط نتائج مباشر', description: 'عرض شريط متحرك لنتائج المباريات الحية أسفل الشاشة.', enabled: false },
+            { id: 'fullScreenMode', name: 'وضع ملء الشاشة', description: 'زر جديد في الهيدر لتوسيع الشات لملء الشاشة.', enabled: true }
+        ];
+        const saved = localStorage.getItem('zamalekAI_experimental_v2');
+        if (!saved) {
+            return defaults;
+        }
+        const savedFeatures = JSON.parse(saved);
+        // Merge defaults with saved to add new features discovered by AI
+        const allFeatures = [...defaults];
+        savedFeatures.forEach(savedFeature => {
+            const existing = allFeatures.find(f => f.id === savedFeature.id);
+            if (existing) {
+                existing.enabled = savedFeature.enabled;
+            } else {
+                allFeatures.push(savedFeature);
+            }
+        });
+        return allFeatures;
+    }
+
+    function saveExperimentalFeatures(features) {
+        localStorage.setItem('zamalekAI_experimental_v2', JSON.stringify(features.map(f => ({id: f.id, enabled: f.enabled}))));
+    }
+
+    function toggleExperimentalFeature(featureId, isEnabled) {
+        let features = getExperimentalFeatures();
+        const feature = features.find(f => f.id === featureId);
+        if (feature) {
+            feature.enabled = isEnabled;
+            saveExperimentalFeatures(features);
+            
+            // Real-time feature toggling
+            if (featureId === 'fullScreenMode') {
+                fullscreenBtn.style.display = isEnabled ? 'block' : 'none';
+            } 
+
+            const message = `تم ${isEnabled ? 'تفعيل' : 'إلغاء تفعيل'} الميزة بنجاح`;
+            speak(message, true);
+        }
+    }
+
+    // --- Autonomous Systems ---
+    function checkInternetConnection() {
+        const connectionStatus = document.getElementById('connection-status');
+        setInterval(() => {
+            if (navigator.onLine) {
+                if (!isOnline) {
+                    isOnline = true;
+                    showTopNotification("📶 عاد الاتصال بالإنترنت.");
+                }
+                if(connectionStatus) connectionStatus.textContent = "متصل";
+                if(connectionStatus) connectionStatus.style.setProperty('--indicator-color', '#28a745');
+            } else {
+                if (isOnline) {
+                    isOnline = false;
+                    showTopNotification("❌ انقطع الاتصال بالإنترنت.");
+                }
+                if(connectionStatus) connectionStatus.textContent = "غير متصل";
+                if(connectionStatus) connectionStatus.style.setProperty('--indicator-color', '#dc3545');
+            }
+        }, 5000);
+    }
+
+    function autoReasoningLayer() {
         setInterval(() => {
             console.log("Performing self-healing check...");
-            // Check if a critical event listener is missing and re-attach it
-            // This is a simplified simulation
             const sendButton = document.querySelector('.send-button');
             if (!sendButton.onclick) {
                 console.warn("Self-healing: Re-attaching sendMessage to send button.");
@@ -791,7 +1716,54 @@
                 console.warn("Self-healing: Re-attaching handleMicClick to mic button.");
                 mic.onclick = handleMicClick;
             }
-        }, 10000); // Check every 10 seconds
+        }, 30000); // Check every 30 seconds
+    }
+
+    function selfEvolutionCheck() {
+        // Simulate checking for new features from a "server"
+        const checkForNewFeatures = () => {
+            console.log("[Self-Evolution] Checking for new experimental features...");
+            let newFeatureAdded = false;
+            // In a real app, this would be an API call.
+            // Let's simulate finding a new feature randomly.
+            if (Math.random() < 0.1) { // 10% chance to find a new feature
+                const newFeature = {
+                    id: 'liveLineupView',
+                    name: 'عرض التشكيل المباشر',
+                    description: 'عرض تشكيلات الفرق على شكل ملعب كرة قدم أثناء البث المباشر.',
+                    enabled: false
+                };
+                let features = getExperimentalFeatures();
+                if (!features.find(f => f.id === newFeature.id)) {
+                    features.push(newFeature);
+                    saveExperimentalFeatures(features);
+                    const notifText = `🆕 تمت إضافة ميزة جديدة إلى التجارب: ${newFeature.name}`;
+                    showTopNotification(notifText);
+                    speak(`تمت إضافة ميزة جديدة بواسطة Zamalek Chat AI Vision`, true);
+                    newFeatureAdded = true;
+                }
+            }
+
+            // Simulate evolving the smart sidebar
+            if (Math.random() < 0.2) { // 20% chance to evolve sidebar
+                const newSidebarFeature = { id: `custom-${Date.now()}`, name: '📈 تحليل الأداء (جديد)', action: () => {} };
+                let sidebarFeatures = getSmartSidebarFeatures();
+                if (!sidebarFeatures.find(f => f.id === newSidebarFeature.id)) {
+                    sidebarFeatures.push(newSidebarFeature);
+                    localStorage.setItem('zamalekAI_smart_sidebar', JSON.stringify(sidebarFeatures));
+                    renderSmartSidebar();
+                    const notifText = `✨ الشريط الذكي تطور وأضاف: ${newSidebarFeature.name}`;
+                    showTopNotification(notifText);
+                    speak(notifText, true);
+                    newFeatureAdded = true;
+                }
+            }
+
+            if (newFeatureAdded) {
+                renderSmartSidebar();
+            }
+        };
+        setInterval(checkForNewFeatures, 3600000); // Check every 1 hour
     }
 </script>
 
