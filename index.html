@@ -1040,7 +1040,9 @@
             modalBackdrop.classList.add('visible');
             activeModal = smartSidebar;
         });
-        btnSettings.addEventListener('click', () => openModal(quickSettingsModal));
+        btnSettings.addEventListener('click', () => {
+            openModal(document.getElementById('quick-settings-modal'));
+        });
         btnExperimental.addEventListener('click', () => {
             renderExperimentalFeatures();
             openModal(experimentalModal);
@@ -1566,9 +1568,8 @@
         return `
             <html style="height: 100%;">
             <body style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; background: var(--bg-color); color: var(--text-color); font-family: Arial, sans-serif; margin: 0;">
-                <h1 style="color: var(--text-color); font-size: 2em; margin-bottom: 10px;">Zamalek Chat AI Vision</h1>
-                <h2 style="font-size: 1.5em; color: var(--primary-red); border: none;">Zamalek AI Search Engine</h2>
-                <input type="text" class="browser-homepage-search" placeholder="...ابحث مع الذكاء الاصطناعي" style="width: 80%; max-width: 500px; padding: 12px 20px; border-radius: 25px; border: 1px solid var(--glass-border); background: var(--glass-bg); font-size: 1em; color: var(--text-color);">
+                <img src="https://upload.wikimedia.org/wikipedia/fr/0/04/ZamalekSC.png" alt="Zamalek AI Logo" style="width: 80px; margin-bottom: 20px; opacity: 0.8;">
+                <input type="text" class="browser-homepage-search" placeholder="...ابحث مع Zamalek AI Vision" style="width: 80%; max-width: 500px; padding: 12px 20px; border-radius: 25px; border: 1px solid var(--glass-border); background: var(--glass-bg); font-size: 1em; color: var(--text-color); text-align: center;">
             </body>
             </html>
         `;
