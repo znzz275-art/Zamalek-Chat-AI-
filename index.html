@@ -658,6 +658,12 @@
             width: 100vw;
             height: 100vh;
             max-width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            max-width: none;
             border-radius: 0;
             padding: 0;
             display: flex;
@@ -690,6 +696,8 @@
             flex-grow: 1;
             border: none;
             background: #fff; /* Default background for loading pages */
+            width: 100%;
+            height: 100%;
             transition: transform 0.2s ease-out; /* For smooth zooming */
         }
         .browser-tabs {
@@ -887,6 +895,10 @@
             <button id="browser-zoom-out" title="تصغير" style="font-size: 1em;">🔍−</button>
             <button id="browser-zoom-in" title="تكبير" style="font-size: 1em;">🔍+</button>
             <span class="modal-close-btn">✖️</span>
+            <!-- New Browser Settings -->
+            <button id="browser-settings-btn" title="إعدادات المتصفح">⚙️</button>
+            <button id="browser-tabs-btn" title="إدارة التبويبات">📑</button>
+
         </div>
         <div class="browser-tabs" id="browser-tabs"></div>
         <iframe id="browser-frame"></iframe>
@@ -947,6 +959,11 @@
     // --- State ---
     let selfUpdateInterval;
     let isOnline = true;
+        // Browser state
+        let browserHistory = [];
+        let browserPrivacySettings = { clearOnExit: false };
+
+
     let browserTabs = [];
     let activeBrowserTabIndex = -1;
     let browserZoomLevel = 1.0;
@@ -1094,6 +1111,12 @@
         document.getElementById('browser-zoom-out').addEventListener('click', () => zoomBrowser(-0.1));
         browserUrl.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigateBrowser(e.target.value); });
         document.getElementById('browser-back').addEventListener('click', () => browserFrame.contentWindow.history.back());
+        // New browser settings buttons
+        document.getElementById('browser-settings-btn').addEventListener('click', () => {
+            alert('محاكاة لإعدادات المتصفح:\n\n- مسح التاريخ\n- إعدادات الخصوصية\n- الإعدادات العامة');
+        });
+
+
         document.getElementById('browser-forward').addEventListener('click', () => browserFrame.contentWindow.history.forward());
         document.getElementById('browser-modal').addEventListener('click', (e) => {
             if (e.target.classList.contains('browser-homepage-search')) {
@@ -1110,6 +1133,7 @@
             } else if (!url.includes('.')) {
                 url = `https://www.google.com/search?q=${encodeURIComponent(url)}`;
             }
+            browserHistory.push({ url: url, timestamp: new Date() });
             updateActiveTab(url);
         }
     }
@@ -1270,6 +1294,25 @@
         if (userText === '') return;
 
         appendMessage(userText, 'user');
+
+        // --- Dashboard & Panel Activation ---
+        if (userText.toLowerCase().includes('dashboard') || userText.includes('لوحة التحكم')) {
+            // Simulate login
+            const username = prompt("أدخل اسم المستخدم للوحة التحكم:");
+            const password = prompt("أدخل كلمة المرور:");
+            if (username === "admin_user" && password === "user_access_123") {
+                window.open('user-dashboard.html', '_blank');
+                appendMessage("✅ تم التحقق بنجاح. تم فتح لوحة تحكم المستخدم في تبويب جديد.", 'ai');
+            } else {
+                appendMessage("❌ بيانات الدخول غير صحيحة. فشل الوصول.", 'ai');
+            }
+            return;
+        }
+        if (userText.toLowerCase().includes('ai panel')) {
+            appendMessage("جاري فتح لوحة التحكم الرئيسية للذكاء الاصطناعي...", 'ai');
+            window.open('ai_panel.html', '_blank');
+            return;
+        }
         conversationHistory.push({ role: "user", parts: [{text: userText}] });
         userInput.value = '';
         
@@ -1360,7 +1403,7 @@
         // Simulate commentator styles by adjusting pitch and rate
         switch(selectedCommentator) {
             case 'medhat': utterance.pitch = 1.3; utterance.rate = 1.1; break; // Medhat Shalaby
-            case 'fares': utterance.pitch = 0.9; utterance.rate = 1.2; break; // Fares Awad
+            case 'fares': utterance.pitch = 0.9; utterance.rate = 1.2; utterance.lang = 'ar-SA'; break; // Fares Awad
             case 'essam': utterance.pitch = 1.1; utterance.rate = 1.0; break; // Essam El Shawaly (same as raouf for simulation)
             case 'raouf': utterance.pitch = 0.8; utterance.rate = 1.1; break; // Raouf Khalif
             case 'notification': utterance.pitch = 1.2; utterance.rate = 1.1; break; // Formal, quick
@@ -1523,7 +1566,7 @@
         return `
             <html style="height: 100%;">
             <body style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; background: var(--bg-color); color: var(--text-color); font-family: Arial, sans-serif; margin: 0;">
-                <img src="https://upload.wikimedia.org/wikipedia/fr/0/04/ZamalekSC.png" alt="Zamalek AI Logo" style="width: 80px; margin-bottom: 20px;">
+                <h1 style="color: var(--text-color); font-size: 2em; margin-bottom: 10px;">Zamalek Chat AI Vision</h1>
                 <h2 style="font-size: 1.5em; color: var(--primary-red); border: none;">Zamalek AI Search Engine</h2>
                 <input type="text" class="browser-homepage-search" placeholder="...ابحث مع الذكاء الاصطناعي" style="width: 80%; max-width: 500px; padding: 12px 20px; border-radius: 25px; border: 1px solid var(--glass-border); background: var(--glass-bg); font-size: 1em; color: var(--text-color);">
             </body>
@@ -1657,7 +1700,7 @@
                 allFeatures.push(savedFeature);
             }
         });
-        return allFeatures;
+        return allFeatures.filter(f => f.active !== false); // Filter out inactive features
     }
 
     function saveExperimentalFeatures(features) {
@@ -1673,6 +1716,10 @@
             
             // Real-time feature toggling
             if (featureId === 'fullScreenMode') {
+                fullscreenBtn.style.display = isEnabled ? 'block' : 'none';
+            }
+            // This is where the AI panel would receive the command and execute it.
+            if (featureId === 'autoFeatureDeletion') {
                 fullscreenBtn.style.display = isEnabled ? 'block' : 'none';
             } 
 
@@ -1727,7 +1774,7 @@
             // In a real app, this would be an API call.
             // Let's simulate finding a new feature randomly.
             if (Math.random() < 0.1) { // 10% chance to find a new feature
-                const newFeature = {
+                 const newFeature = {
                     id: 'liveLineupView',
                     name: 'عرض التشكيل المباشر',
                     description: 'عرض تشكيلات الفرق على شكل ملعب كرة قدم أثناء البث المباشر.',
@@ -1737,9 +1784,9 @@
                 if (!features.find(f => f.id === newFeature.id)) {
                     features.push(newFeature);
                     saveExperimentalFeatures(features);
-                    const notifText = `🆕 تمت إضافة ميزة جديدة إلى التجارب: ${newFeature.name}`;
+                    const notifText = `🆕 [تطور ذاتي] تمت إضافة ميزة جديدة إلى التجارب: ${newFeature.name}`;
                     showTopNotification(notifText);
-                    speak(`تمت إضافة ميزة جديدة بواسطة Zamalek Chat AI Vision`, true);
+                    speak(notifText, true);
                     newFeatureAdded = true;
                 }
             }
@@ -1751,7 +1798,7 @@
                 if (!sidebarFeatures.find(f => f.id === newSidebarFeature.id)) {
                     sidebarFeatures.push(newSidebarFeature);
                     localStorage.setItem('zamalekAI_smart_sidebar', JSON.stringify(sidebarFeatures));
-                    renderSmartSidebar();
+                    // renderSmartSidebar(); // Render only when sidebar is opened
                     const notifText = `✨ الشريط الذكي تطور وأضاف: ${newSidebarFeature.name}`;
                     showTopNotification(notifText);
                     speak(notifText, true);
@@ -1759,11 +1806,25 @@
                 }
             }
 
+            // Simulate AI deleting an unused feature based on "telemetry"
+            let features = getExperimentalFeatures();
+            const deletionCandidate = features.find(f => f.id === 'liveScoreTicker' && f.enabled);
+            const autoDeletionEnabled = features.find(f => f.id === 'autoFeatureDeletion' && f.enabled);
+
+            if (deletionCandidate && autoDeletionEnabled && Math.random() < 0.3) { // 30% chance to decide to delete it
+                deletionCandidate.active = false; // Mark as inactive instead of deleting
+                saveExperimentalFeatures(features);
+                const notifText = `🗑️ [تحسين ذاتي] قرر الذكاء الاصطناعي إيقاف ميزة "${deletionCandidate.name}" لعدم الاستخدام.`;
+                showTopNotification(notifText);
+                speak(notifText, true);
+                newFeatureAdded = true; // To trigger a re-render of the experimental panel if it's open
+            }
+
             if (newFeatureAdded) {
                 renderSmartSidebar();
             }
         };
-        setInterval(checkForNewFeatures, 3600000); // Check every 1 hour
+        setInterval(checkForNewFeatures, 3600000); // Check every 1 hour for self-evolution
     }
 </script>
 

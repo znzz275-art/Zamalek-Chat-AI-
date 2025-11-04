@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>لوحة تحكم المستخدم</title>
+    <link rel="icon" href="https://upload.wikimedia.org/wikipedia/fr/0/04/ZamalekSC.png" type="image/png">
+    <style>
+        :root {
+            --bg-color: #0d0d0d;
+            --primary-red: #e41e26;
+            --text-color: #f5f5f5;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 1200px;
+            margin: auto;
+        }
+        h1, h2 {
+            color: var(--primary-red);
+            border-bottom: 1px solid var(--glass-border);
+            padding-bottom: 10px;
+        }
+        .panel {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .panel-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+        .control-item {
+            background: rgba(0,0,0,0.2);
+            padding: 15px;
+            border-radius: 8px;
+        }
+        .control-item select, .control-item input {
+            width: 100%;
+            padding: 8px;
+            background: rgba(0,0,0,0.4); color: white; border: 1px solid var(--glass-border); border-radius: 5px;
+        }
+        .control-item label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        .control-item button {
+            width: 100%;
+            padding: 10px;
+            background-color: var(--primary-red);
+            border: none;
+            color: white;
+            cursor: pointer;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        .control-item button:hover {
+            background-color: #c00;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>👤 لوحة تحكم المستخدم</h1>
+
+        <div class="panel">
+            <h2>إعدادات الصوت والمعلق</h2>
+            <div class="panel-grid">
+                <div class="control-item">
+                    <label for="sound-toggle">تفعيل الصوت</label>
+                    <input type="checkbox" id="sound-toggle">
+                </div>
+                <div class="control-item">
+                    <label for="commentator-select">اختيار المعلق</label>
+                    <select id="commentator-select">
+                        <option value="auto">تلقائي</option>
+                        <option value="fares">فارس عوض</option>
+                        <option value="essam">عصام الشوالي</option>
+                        <option value="raouf">رؤوف خليف</option>
+                        <option value="medhat">مدحت شلبي</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>إعدادات الواجهة</h2>
+            <div class="panel-grid">
+                <div class="control-item">
+                    <label for="theme-select">المظهر</label>
+                    <select id="theme-select">
+                        <option value="auto">تلقائي</option>
+                        <option value="dark">ليلي</option>
+                        <option value="light">نهاري</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>إدارة البيانات</h2>
+            <div class="panel-grid">
+                <div class="control-item">
+                    <label>مسح المحادثة الحالية</label>
+                    <button onclick="alert('سيتم مسح المحادثة عند العودة للشات. (محاكاة)')">مسح المحادثة</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // This script synchronizes the dashboard controls with the main chat's localStorage
+        document.addEventListener('DOMContentLoaded', () => {
+            const settings = JSON.parse(localStorage.getItem('zamalekAI_settings') || '{}');
+
+            const soundToggle = document.getElementById('sound-toggle');
+            const commentatorSelect = document.getElementById('commentator-select');
+            const themeSelect = document.getElementById('theme-select');
+
+            // Load settings
+            soundToggle.checked = settings.sound !== false;
+            commentatorSelect.value = settings.commentator || 'auto';
+            themeSelect.value = settings.theme || 'auto';
+
+            // Save settings on change
+            soundToggle.addEventListener('change', saveSettings);
+            commentatorSelect.addEventListener('change', saveSettings);
+            themeSelect.addEventListener('change', saveSettings);
+
+            function saveSettings() {
+                const currentSettings = JSON.parse(localStorage.getItem('zamalekAI_settings') || '{}');
+                currentSettings.sound = soundToggle.checked;
+                currentSettings.commentator = commentatorSelect.value;
+                currentSettings.theme = themeSelect.value;
+                localStorage.setItem('zamalekAI_settings', JSON.stringify(currentSettings));
+            }
+        });
+    </script>
+</body>
+</html>

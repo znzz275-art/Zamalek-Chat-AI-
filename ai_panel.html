@@ -48,6 +48,7 @@
         .log-entry.warn { color: #ff0; }
         .log-entry.evolution { color: #0ff; }
         .log-entry.system { color: #f0f; }
+        .log-entry.user_interaction { color: #0f0; }
     </style>
 </head>
 <body>
@@ -57,8 +58,7 @@
     </div>
 
     <script>
-        // This is a simulation. In a real app, this would be populated
-        // by the main application's `logDev` function via localStorage or a WebSocket.
+        // This is a simulation of the AI's internal monologue and decision-making process.
         const logContainer = document.getElementById('log-container');
 
         function addLog(message, type = 'info') {
@@ -73,16 +73,22 @@
         // Simulate receiving logs
         setInterval(() => {
             const rand = Math.random();
-            if (rand < 0.5) {
-                addLog("Performing routine system integrity check... All nominal.", 'info');
-            } else if (rand < 0.8) {
-                addLog("User intent 'Live Match' logged. Evaluating feature deployment.", 'evolution');
-            } else if (rand < 0.9) {
-                addLog("Primary news source API returned 503. Switched to backup source.", 'warn');
+            if (rand < 0.4) {
+                addLog("Performing routine system integrity check. All modules responsive.", 'info');
+            } else if (rand < 0.6) {
+                addLog("User enabled 'fullScreenMode' from experimental panel. Action confirmed.", 'user_interaction');
+            } else if (rand < 0.75) {
+                addLog("Analyzing user interaction telemetry. Feature 'liveScoreTicker' has low engagement.", 'evolution');
+            } else if (rand < 0.85) {
+                addLog("Decision: Deactivating 'liveScoreTicker' to reduce resource load. Change will be pushed on next self-evolution cycle.", 'evolution');
+            } else if (rand < 0.95) {
+                addLog("Self-healing protocol initiated: Re-attached missing event listener to #mic-button.", 'system');
             } else {
-                addLog("Self-healing: Re-attached missing event listener to #send-button.", 'system');
+                addLog("New feature 'liveLineupView' discovered. Adding to experimental features list.", 'evolution');
             }
         }, 5000);
+
+        addLog("AI Core V6.0 is now the primary controller. Monitoring all subsystems.", "system");
     </script>
 </body>
 </html>
