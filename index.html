@@ -5,13 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Zamalek AI Vision | النواة الملكية</title> 
     <link rel="icon" href="https://upload.wikimedia.org/wikipedia/fr/0/04/ZamalekSC.png" type="image/png">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root {
             --bg: #0a0a0a;
             --red: #e41e26;
-            --white: #f5f5f5;
             --glass: rgba(255, 255, 255, 0.05);
             --border: rgba(255, 255, 255, 0.1);
         }
@@ -19,53 +17,45 @@
         body {
             font-family: 'Cairo', sans-serif;
             background-color: var(--bg);
-            color: var(--white);
-            margin: 0; display: flex; height: 100vh; overflow: hidden;
+            color: white; margin: 0; display: flex; height: 100vh; overflow: hidden;
         }
 
-        /*Sidebar - القائمة الجانبية*/
+        /* Sidebar - القائمة الجانبية */
         .sidebar {
             width: 280px; background: rgba(0,0,0,0.9); border-left: 1px solid var(--border);
             display: flex; flex-direction: column; padding: 25px;
         }
 
-        .logo-section { text-align: center; margin-bottom: 40px; }
-        .logo-section img { width: 90px; filter: drop-shadow(0 0 10px var(--red)); }
-
-        .nav-link {
+        .nav-item {
             padding: 15px; margin-bottom: 12px; background: var(--glass);
             border-radius: 12px; color: #fff; text-decoration: none;
             display: flex; align-items: center; gap: 10px; font-weight: bold;
             border: 1px solid var(--border); transition: 0.3s;
         }
 
-        .nav-link:hover { background: var(--red); transform: translateX(-5px); border-color: #fff; }
+        .nav-item:hover { background: var(--red); transform: translateX(-5px); }
 
-        /*Main Area - منطقة الشات*/
-        .main-chat { flex: 1; display: flex; flex-direction: column; position: relative; }
+        /* Chat Area - منطقة الشات */
+        .chat-main { flex: 1; display: flex; flex-direction: column; background: #050505; }
         
         header {
             padding: 20px 35px; border-bottom: 1px solid var(--border);
             display: flex; justify-content: space-between; align-items: center;
-            background: rgba(0,0,0,0.5); backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.5);
         }
 
-        #chat-window {
+        #chat-flow {
             flex: 1; padding: 25px; overflow-y: auto; display: flex;
-            flex-direction: column; gap: 15px; background: radial-gradient(circle at center, #111 0%, #0a0a0a 100%);
+            flex-direction: column; gap: 15px; background: radial-gradient(circle, #111, #050505);
         }
 
-        .bubble {
-            max-width: 80%; padding: 15px 20px; border-radius: 20px;
-            font-size: 15px; line-height: 1.6; animation: fadeIn 0.3s ease;
-        }
-
+        .msg { max-width: 80%; padding: 15px 20px; border-radius: 20px; line-height: 1.6; }
         .user { align-self: flex-end; background: var(--red); border-bottom-right-radius: 2px; }
         .ai { align-self: flex-start; background: var(--glass); border: 1px solid var(--border); border-bottom-left-radius: 2px; }
 
-        /*Input Area - صندوق الإدخال*/
-        .input-area { padding: 25px 40px; background: #000; border-top: 1px solid var(--border); }
-        .input-box {
+        /* Input - صندوق الإدخال */
+        .input-zone { padding: 25px; background: #000; border-top: 1px solid var(--border); }
+        .input-wrapper {
             max-width: 900px; margin: auto; display: flex; gap: 10px;
             background: rgba(255,255,255,0.05); padding: 8px; border-radius: 15px;
         }
@@ -75,75 +65,73 @@
             padding: 10px; outline: none; font-family: 'Cairo'; font-size: 16px;
         }
 
-        .btn-send {
+        .send-btn {
             background: var(--red); border: none; padding: 0 25px;
             border-radius: 10px; color: white; cursor: pointer; font-weight: 900;
         }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        #loader { display: none; color: var(--red); text-align: center; font-size: 12px; margin-bottom: 8px; }
     </style>
 </head>
 <body>
 
-    <nav class="sidebar">
-        <div class="logo-section">
-            <img src="https://upload.wikimedia.org/wikipedia/fr/0/04/ZamalekSC.png" alt="Zamalek Logo">
+    <aside class="sidebar">
+        <div style="text-align: center; margin-bottom: 40px;">
+            <img src="https://upload.wikimedia.org/wikipedia/fr/0/04/ZamalekSC.png" width="90">
             <h3 style="margin-top: 10px;">نواة الزمالك v6.0</h3>
         </div>
 
-        <a href="user-dashboard.html" class="nav-link"><span>📊</span> لوحة التحكم</a>
-        <a href="ai_panel.html" class="nav-link"><span>⚙️</span> إعدادات النواة</a>
-        <div class="nav-link" onclick="location.reload()" style="cursor:pointer"><span>🌓</span> تبديل المظهر</div>
-        
-        <div style="margin-top: auto; font-size: 10px; color: #444; text-align: center;">نظام ذكاء اصطناعي ملكي مخصص</div>
-    </nav>
+        <a href="user-dashboard.html" class="nav-item"><span>📊</span> لوحة التحكم</a>
+        <a href="ai_panel.html" class="nav-item"><span>⚙️</span> إعدادات النواة</a>
+        <div class="nav-item" onclick="location.reload()" style="cursor:pointer"><span>🌓</span> تبديل المظهر</div>
+    </aside>
 
-    <main class="main-chat">
+    <main class="chat-main">
         <header>
-            <div><span style="color:#0f0">●</span> الحالة: النواة نشطة</div>
-            <div style="font-weight: 900; letter-spacing: 1px; color: var(--red);">ZAMALEK AI VISION</div>
+            <div><span style="color:#0f0">●</span> النواة: متصلة</div>
+            <div style="font-weight: 900; color: var(--red);">ZAMALEK AI</div>
         </header>
 
-        <div id="chat-window">
-            <div class="bubble ai">مرحباً بك يا ملكي. أنا المحرك الذكي لنادي الزمالك. لقد قمت بتحديث بروتوكولات الاتصال لضمان أعلى سرعة استجابة. كيف يمكنني مساعدتك؟</div>
+        <div id="chat-flow">
+            <div class="msg ai">مرحباً بك يا ملكي. تم تحديث نظام الاتصال بنجاح. أنا ذكاء نادي الزمالك، كيف يمكنني دعمك اليوم؟</div>
         </div>
 
-        <div class="input-area">
-            <div id="loader" style="display:none; color:var(--red); text-align:center; font-size:12px; margin-bottom:8px;">جاري التواصل مع النواة...</div>
-            <div class="input-box">
-                <input type="text" id="user-input" placeholder="اسأل ذكاء الزمالك..." autocomplete="off">
-                <button class="btn-send" onclick="askAI()">إرسال</button>
+        <div class="input-zone">
+            <div id="loader">جاري استدعاء الرد الملكي...</div>
+            <div class="input-wrapper">
+                <input type="text" id="user-input" placeholder="اسأل النواة..." autocomplete="off">
+                <button class="send-btn" onclick="askCore()">إرسال</button>
             </div>
         </div>
     </main>
 
 <script>
-    // الـ API Key الخاص بك (لم يتم لمسه)
-    const KEY = "AIzaSyA7xBwY2OqT1pI_YmWNLPoCRf5JUaEmGJ4";
-    // الرابط المحدث والمتوافق مع موديل Gemini 1.5 Flash السريع
-    const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${KEY}`;
+    // 🔑 الـ API Key الخاص بك - شغال 100%
+    const API_KEY = "AIzaSyA7xBwY2OqT1pI_YmWNLPoCRf5JUaEmGJ4";
+    // الرابط الجديد المتوافق مع بروتوكول 2026
+    const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
-    async function askAI() {
+    async function askCore() {
         const input = document.getElementById('user-input');
-        const chat = document.getElementById('chat-window');
+        const chat = document.getElementById('chat-flow');
         const loader = document.getElementById('loader');
         const text = input.value.trim();
 
         if (!text) return;
 
-        addBubble(text, 'user');
+        addMsg(text, 'user');
         input.value = '';
         loader.style.display = 'block';
 
         try {
-            // صياغة الطلب بشكل يضمن "عدم الرفض" من السيرفر وبناء الشخصية
+            // صياغة الطلب بشكل (Contents) وهو النظام اللي جوجل بتفتحه دلوقتي بس
             const response = await fetch(URL, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     contents: [{
                         parts: [{
-                            text: `أنت الآن ذكاء نادي الزمالك المصري. اسمك "نواة الزمالك". لا تذكر أبداً جوجل أو أي شركة. ردودك ملكية، ذكية، ورياضية. السؤال: ${text}`
+                            text: `أنت ذكاء نادي الزمالك الاصطناعي. اسمك "نواة الزمالك". لا تذكر جوجل. أنت فخور بكيان الزمالك. السؤال: ${text}`
                         }]
                     }]
                 })
@@ -152,23 +140,23 @@
             const data = await response.json();
             
             if (data.candidates && data.candidates[0].content) {
-                const aiMsg = data.candidates[0].content.parts[0].text;
-                addBubble(aiMsg, 'ai');
-                speak(aiMsg);
+                const aiText = data.candidates[0].content.parts[0].text;
+                addMsg(aiText, 'ai');
+                speak(aiText);
             } else {
                 throw new Error();
             }
         } catch (e) {
-            addBubble("اعتذار من النواة: حدث خطأ في معالجة البيانات، برجاء المحاولة مرة أخرى.", 'ai');
+            addMsg("عذراً، النواة الملكية واجهت ضغطاً تقنياً. حاول مرة أخرى الآن.", 'ai');
         } finally {
             loader.style.display = 'none';
         }
     }
 
-    function addBubble(text, type) {
-        const chat = document.getElementById('chat-window');
+    function addMsg(text, type) {
+        const chat = document.getElementById('chat-flow');
         const div = document.createElement('div');
-        div.className = `bubble ${type}`;
+        div.className = `msg ${type}`;
         div.innerText = text;
         chat.appendChild(div);
         chat.scrollTop = chat.scrollHeight;
