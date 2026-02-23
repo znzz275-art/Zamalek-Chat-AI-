@@ -3,1831 +3,200 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zamalek Chat AI Vision</title> 
+    <title>Zamalek AI Vision | النواة الملكية</title> 
     <link rel="icon" href="https://upload.wikimedia.org/wikipedia/fr/0/04/ZamalekSC.png" type="image/png">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
+
     <style>
-        /*
-        * 🧠 Zamalek Chat AI Vision - Core System Update 🧠
-        * Version: 6.0 (Self-Evolving Core)
-        * Design: Glassmorphism, Auto Day/Night Mode
-        * Colors: #0d0d0d, #e41e26, #f5f5f5 (Dark) / #f0f2f5, #333 (Light)
-        */
         :root {
-            --bg-color: #0d0d0d;
-            --primary-red: #e41e26;
-            --text-color: #f5f5f5;
-            --glass-bg: rgba(255, 255, 255, 0.05);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --shadow-color: rgba(0, 0, 0, 0.3);
-            --border-radius: 16px;
-            --header-height: 55px;
+            --bg-dark: #0a0a0a;
+            --zamalek-red: #e41e26;
+            --zamalek-white: #ffffff;
+            --glass: rgba(255, 255, 255, 0.03);
+            --border: rgba(255, 255, 255, 0.08);
         }
 
-        html[data-theme='light'] {
-            --bg-color: #f0f2f5;
-            --text-color: #1c1e21;
-            --glass-bg: rgba(255, 255, 255, 0.7);
-            --glass-border: rgba(0, 0, 0, 0.1);
-            --shadow-color: rgba(0, 0, 0, 0.1);
+        body, html {
+            margin: 0; padding: 0; height: 100%;
+            font-family: 'Cairo', sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--zamalek-white);
+            display: flex; overflow: hidden;
         }
 
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            margin: 0;
-            padding: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .chat-container {
-            width: 100%;
-            height: 100%;
-            max-width: 800px; /* For desktop view */
-            background: var(--glass-bg);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--border-radius);
-            box-shadow: 0 8px 32px 0 var(--shadow-color);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            position: relative;
-        }
-
-        /* Watermark Logo */
-        .chat-container::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 50%;
-            height: 50%;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23e41e26' fill-opacity='0.5'%3E%3Cpath d='M50 0 L60 15 L50 20 L40 15 Z'/%3E%3Cpath d='M50 22 L70 40 L50 90 L30 40 Z'/%3E%3C/g%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: center;
-            background-size: contain;
-            opacity: 0.03;
-            z-index: 0;
-        }
-
-        @media (max-width: 800px) {
-            .chat-container {
-                border-radius: 0;
-                border: none;
-            }
-        }
-
-        .chat-header {
-            height: var(--header-height);
-            padding: 0 15px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-shrink: 0;
-            border-bottom: 1px solid var(--glass-border);
-            position: relative;
-            z-index: 10;
-        }
-
-        .header-title {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 1em;
-            font-weight: bold;
-        }
-
-        .header-logo {
-            width: 30px;
-            height: 30px;
-        }
-
-        .header-button {
-            background: none;
-            border: none;
-            color: var(--text-color);
-            font-size: 1.5em;
-            cursor: pointer; 
-            transition: transform 0.2s;
-            padding: 5px;
-        }
-        .header-button:active {
-            transform: scale(0.9);
-        }
-        #fullscreen-btn {
-            display: none; /* Hidden by default, enabled by experimental feature */
-        }
-        body:fullscreen .chat-container, body:-webkit-full-screen .chat-container {
-            border-radius: 0;
-            transform: scale(0.9);
-        }
-
-        /* Settings Dropdown */
-        .settings-dropdown {
-            position: absolute;
-            top: calc(var(--header-height) + 5px);
-            right: 10px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 10px;
-            box-shadow: 0 8px 20px var(--shadow-color);
-            z-index: 100;
-            width: 220px;
-            padding: 10px;
-            display: none; /* Hidden by default */
-            animation: dropdown-fade-in 0.3s ease-out;
-        }
-
-        @keyframes dropdown-fade-in {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .settings-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 10px 5px;
-            font-size: 0.9em;
-        }
-        .settings-item select {
-            background: var(--glass-bg);
-            color: var(--text-color);
-            border: 1px solid var(--glass-border);
-            border-radius: 5px;
-            padding: 4px;
-        }
-        .settings-item button {
-            width: 100%;
-            background: var(--primary-red);
-            color: white;
-            border: none;
-            padding: 8px;
-            border-radius: 5px;
-        }
-
-        /* Toggle Switch */
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 40px;
-            height: 20px;
-        }
-        .switch input { display: none; }
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #ccc;
-            transition: .4s;
-            border-radius: 20px;
-        }
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 14px; width: 14px;
-            left: 3px; bottom: 3px;
-            background-color: white;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        input:checked + .slider { background-color: var(--primary-red); }
-        input:checked + .slider:before { transform: translateX(20px); }
-
-        .chat-box {
-            flex-grow: 1;
-            padding: 15px 10px;
-            overflow-y: scroll;
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            position: relative;
-        }
-
-        /* Custom Scrollbar */
-        .chat-box::-webkit-scrollbar {
-            width: 4px;
-        }
-        .chat-box::-webkit-scrollbar-thumb {
-            background-color: var(--primary-red);
-            border-radius: 4px;
-        }
-
-        .message {
-            max-width: 80%;
-            padding: 10px 15px;
-            border-radius: var(--border-radius);
-            line-height: 1.5;
-            word-wrap: break-word;
-            animation: message-fade-in 0.4s ease-out;
-        }
-
-        @keyframes message-fade-in {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .user-message {
-            background-color: var(--primary-red); 
-            color: #fff;
-            align-self: flex-end;
-            border-bottom-right-radius: 4px;
-        }
-
-        .ai-message {
-            background-color: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            align-self: flex-start;
-            border-bottom-left-radius: 4px;
-            white-space: pre-wrap;
-        }
-        .ai-message .replay-audio-btn {
-            position: absolute;
-            bottom: 5px;
-            left: 10px; /* RTL support */
-            cursor: pointer;
-            font-size: 0.8em;
-            opacity: 0.5;
-        }
-        .audio-message {
-            background-color: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            align-self: flex-end; /* Sent by user */
-            border-bottom-right-radius: 4px;
-            padding: 10px;
-            width: 250px;
-        }
-        .audio-message audio {
-            width: 100%;
-            filter: invert(1) sepia(1) saturate(5) hue-rotate(320deg);
-        }
-
-        .ai-message img {
-            max-width: 100%;
-            border-radius: 10px;
-            margin-top: 10px;
-        }
-
-        .video-container {
-            position: relative;
-            padding-bottom: 56.25%; /* 16:9 aspect ratio */
-            height: 0;
-            overflow: hidden;
-            width: 100%;
-            background: #000;
-            border-radius: 10px;
-            margin-top: 10px;
-        }
-
-        .video-container iframe {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            border: 0;
-            cursor: pointer;
-        }
-
-        /* Match Result Component */
-        .match-result {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 10px;
-            padding: 15px;
-            margin-top: 10px;
-            text-align: center;
-            box-shadow: 0 2px 10px var(--shadow-color);
-        }
-        .match-result .competition {
-            font-size: 0.9em;
-            color: #aaa;
-            margin-bottom: 15px;
-        }
-        .match-result .teams {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            font-size: 1.2em;
-            font-weight: bold;
-        }
-        .match-result .team {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .match-result .team img {
-            width: 35px;
-            height: 35px;
-        }
-        .match-result .score {
-            font-size: 1.5em;
-            font-weight: bold;
-            color: var(--primary-red);
-        }
-        .match-result .status {
-            font-size: 0.8em;
-            color: #888;
-            margin-top: 15px;
-        }
-
-        .typing-indicator {
-            align-self: flex-start;
-            padding: 8px 12px;
-            border-radius: var(--border-radius);
-            font-size: 0.9em;
-            color: #aaa;
-            display: none; /* Hidden by default */
-            background: var(--glass-bg);
-        }
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
-        }
-
-        .chat-notification {
-            align-self: center;
-            background-color: rgba(228, 30, 38, 0.2);
-            color: var(--text-color);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.8em;
-            margin: 5px 0;
-        }
-
-        .input-area {
-            display: flex;
-            padding: 10px 15px;
-            gap: 10px;
-            align-items: center;
-            border-top: 1px solid var(--glass-border);
-            background: var(--glass-bg);
-        }
-
-        .control-buttons {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .control-buttons .icon-button {
-            font-size: 1.2em;
-            width: 40px;
-            height: 40px;
-        }
-        .control-buttons .icon-button.active {
-            background-color: var(--primary-red);
-        }
-        #mic-button.recording-fares { animation: pulse-blue 1.5s infinite; }
-        #mic-button.recording-medhat { animation: pulse-red 1.5s infinite; }
-        #mic-button.recording-raouf { animation: pulse-green 1.5s infinite; }
-        #mic-button.recording-default { animation: pulse 1s infinite; }
-        @keyframes pulse-blue { 0%, 100% { box-shadow: 0 0 15px #0af; } 50% { box-shadow: 0 0 25px #0af; } }
-        @keyframes pulse-red { 0%, 100% { box-shadow: 0 0 15px var(--primary-red); } 50% { box-shadow: 0 0 25px var(--primary-red); } }
-        @keyframes pulse-green { 0%, 100% { box-shadow: 0 0 15px #0f0; } 50% { box-shadow: 0 0 25px #0f0; } }
-
-
-
-        #user-input {
-            flex-grow: 1;
-            padding: 10px 18px;
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            font-size: 1em;
-            outline: none;
-            background-color: rgba(0,0,0,0.2);
-            color: var(--text-color);
-        }
-
-        #user-input::placeholder {
-            color: #888;
-        }
-
-        .icon-button {
-            background: none;
-            border: none;
-            color: var(--text-color);
-            font-size: 1.5em;
-            cursor: pointer;
-            width: 45px;
-            height: 45px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 50%;
-            transition: background-color 0.2s, transform 0.2s;
-        }
-
-        .icon-button:hover {
-            background-color: var(--glass-bg);
-        }
-
-        .icon-button:active {
-            transform: scale(0.9);
-        }
-
-        .send-button {
-            background-color: var(--primary-red);
-            color: #fff;
-        }
-        html[data-theme='light'] .send-button {
-            color: #fff;
-        }
-
-        /* Video Modal */
-        .video-modal {
-            display: none; /* Hidden by default */
-            position: fixed;
-            z-index: 1000;
-            left: 0; top: 0;
-            width: 100%; height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.8);
-            backdrop-filter: blur(5px);
-            animation: modal-fade-in 0.3s;
-        }
-        .video-modal-content {
-            position: relative;
-            margin: auto;
-            padding: 0;
-            width: 90%;
-            max-width: 900px;
-            top: 50%;
-            transform: translateY(-50%);
-        }
-        .video-modal-content .video-container {
-            border-radius: var(--border-radius);
-        }
-        .close-modal {
-            position: absolute;
-            top: -40px;
-            right: 0;
-            color: #f1f1f1;
-            font-size: 35px;
-            font-weight: bold;
-            cursor: pointer;
-        }
-
-        @keyframes modal-fade-in {
-            from { background-color: rgba(0,0,0,0); }
-            to { background-color: rgba(0,0,0,0.8); }
-        }
-
-        /* Top Notification Banner */
-        .top-notification {
-            position: absolute;
-            top: -50px;
-            left: 50%;
-            transform: translateX(-50%);
-            background-color: var(--primary-red);
-            color: white;
-            padding: 8px 20px;
-            border-radius: 0 0 10px 10px;
-            font-size: 0.9em;
-            z-index: 200;
-            transition: top 0.4s ease-out;
-        }
-
-        /* Modal & Sidebar Styles */
-        .modal-backdrop {
-            display: none; /* Hidden by default */
-            position: fixed;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
-            background-color: rgba(0,0,0,0.6);
-            backdrop-filter: blur(5px);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-        }
-        .modal-backdrop.visible {
-            display: flex;
-        }
-        .modal-backdrop.closing .modal-card, .modal-backdrop.closing .sidebar {
-            animation: modal-fade-out 0.3s ease-out forwards;
-        }
-
-        .modal-card {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--border-radius);
-            padding: 0; /* Remove padding to allow iframe to fill space */
-            width: 90%;
-            max-width: 400px;
-            box-shadow: 0 8px 32px 0 var(--shadow-color);
-            animation: modal-slide-up 0.4s ease-out;
-        }
-        @keyframes modal-slide-up {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-        @keyframes modal-fade-out {
-            from { opacity: 1; transform: scale(1); }
-            to { opacity: 0; transform: scale(0.95); }
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding: 10px 20px 10px 20px;
-            border-bottom: 1px solid var(--glass-border);
-        }
-        .modal-header h3 { margin: 0; }
-        .modal-close-btn { font-size: 1.5em; cursor: pointer; }
-        .modal-body .settings-item { padding: 15px 5px; }
-        .modal-body .settings-item input[type="range"] { width: 60%; }
-        .experimental-feature {
-            border-bottom: 1px solid var(--glass-border);
-            padding: 15px 5px;
-        }
-        .experimental-feature:last-child {
-            border-bottom: none;
-        }
-        .experimental-feature-header { display: flex; justify-content: space-between; align-items: center; }
-        .experimental-feature p { font-size: 0.8em; color: #ccc; margin: 5px 0 0 0; }
-        .no-features {
-            text-align: center; 
-            padding: 20px;
-            color: #aaa;
-        }
-        .modal-body .settings-item button {
-            text-align: center;
-            padding: 20px;
-            color: #aaa;
-        }
-        .modal-body .settings-item button {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            cursor: pointer;
-        }
-
+        /* الشريط الجانبي - تم ربط الروابط فعلياً */
         .sidebar {
-            position: fixed;
-            top: 0;
-            right: -100%; /* Start off-screen */
-            width: 320px;
-            height: 100%;
-            background: var(--glass-bg);
+            width: 280px;
+            background: rgba(0,0,0,0.8);
             backdrop-filter: blur(15px);
-            border-left: 1px solid var(--glass-border);
-            z-index: 1010;
-            transition: right 0.4s ease-in-out;
-            display: flex;
-            flex-direction: column; 
-        }
-        .sidebar.visible {
-            right: 0;
-        }
-        .sidebar-header {
-            padding: 0 15px;
-            height: var(--header-height);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--glass-border);
-            flex-shrink: 0;
-        }
-        .sidebar-body {
-            padding: 15px;
-            overflow-y: auto;
-        }
-        .news-card {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 15px;
-            background: rgba(0,0,0,0.1);
-            padding: 10px;
-            border-radius: 10px;
-        }
-        .news-card img {
-            width: 80px;
-            height: 80px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-        .news-card-content h4 {
-            margin: 0 0 5px 0;
-            font-size: 0.9em;
-        }
-        .news-card-content p {
-            margin: 0;
-            font-size: 0.8em;
-            color: #ccc;
-        }
-        html[data-theme='light'] .news-card-content p {
-            color: #555;
-        }
-        .status-indicator {
-            position: relative;
-            padding-left: 20px;
-        }
-        .status-indicator::before {
-            content: '';
-            position: absolute;
-            left: 0; top: 50%; transform: translateY(-50%);
-            width: 10px; height: 10px;
-            border-radius: 50%;
-            background-color: #28a745; /* Green for online */
-        }
-        .smart-sidebar-item {
-            padding: 10px;
-            border-bottom: 1px solid var(--glass-border);
-            cursor: pointer;
+            border-left: 1px solid var(--border);
+            display: flex; flex-direction: column; padding: 30px 15px;
         }
 
-        /* Zamalek Browser Styles */
-        #browser-modal {
-            /* Rebuilt for true full-screen experience */
-            width: 100vw;
-            height: 100vh;
-            max-width: 100%;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            max-width: none;
-            border-radius: 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden; /* Ensure content stays within rounded corners */
-        }
-        .browser-controls {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 15px;
-            background: rgba(0,0,0,0.3);
-            flex-shrink: 0;
-        }
-        .browser-controls button {
-            background: none; border: none; color: var(--text-color); font-size: 1.2em; cursor: pointer;
-        }
-        #browser-mic-btn.recording {
-            color: var(--primary-red);
-        }
-        #browser-url {
-            flex-grow: 1;
-            padding: 8px 12px;
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
-            background: rgba(0,0,0,0.2);
-            color: var(--text-color);
-        }
-        #browser-frame {
-            flex-grow: 1;
-            border: none;
-            background: #fff; /* Default background for loading pages */
-            width: 100%;
-            height: 100%;
-            transition: transform 0.2s ease-out; /* For smooth zooming */
-        }
-        .browser-tabs {
-            display: flex;
-            background: rgba(0,0,0,0.2);
-            padding: 5px 5px 0 5px;
-            gap: 5px;
-            overflow-x: auto;
-            flex-shrink: 0;
-        }
-        .browser-tab {
-            padding: 8px 15px;
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-bottom: none;
-            border-radius: 8px 8px 0 0;
-            cursor: pointer;
-            font-size: 0.8em;
-            white-space: nowrap;
-        }
-        .browser-tab.active {
-            background: rgba(0,0,0,0.3);
-            border-color: var(--primary-red);
+        .logo-area { text-align: center; margin-bottom: 40px; }
+        .logo-area img { width: 90px; filter: drop-shadow(0 0 15px var(--zamalek-red)); }
+
+        .nav-btn {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            color: white; padding: 15px; border-radius: 12px;
+            margin-bottom: 12px; cursor: pointer; text-decoration: none;
+            display: flex; align-items: center; gap: 10px; transition: 0.3s;
         }
 
-        /* Browser Homepage */
-        .browser-homepage {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100%;
-            background: var(--bg-color);
-            color: var(--text-color);
-            text-align: center;
-        }
-        .browser-homepage .logo {
-            width: 80px;
-            margin-bottom: 20px;
-        }
-        .browser-homepage h2 {
-            font-size: 1.5em;
-            color: var(--primary-red);
-            border: none;
-        }
-        .browser-homepage .search-box {
-            width: 80%;
-            max-width: 500px;
-            padding: 12px 20px;
-            border-radius: 25px;
-            border: 1px solid var(--glass-border);
-            background: var(--glass-bg);
-            font-size: 1em;
-            color: var(--text-color);
+        .nav-btn:hover { background: var(--zamalek-red); transform: translateX(-5px); }
+
+        /* منطقة المحادثة */
+        .chat-main {
+            flex: 1; display: flex; flex-direction: column;
+            background: radial-gradient(circle at top right, #1a1a1a, #050505);
         }
 
-        /* Commentator Indicator */
-        #commentator-indicator {
-            position: absolute;
-            bottom: 65px; /* Above input area */
-            left: 15px;
-            font-size: 0.7em;
-            color: #888;
-            background: var(--glass-bg);
-            padding: 2px 8px;
-            border-radius: 5px;
-            opacity: 0;
-            transition: opacity 0.3s;
+        header {
+            padding: 20px 40px; border-bottom: 1px solid var(--border);
+            display: flex; justify-content: space-between; align-items: center;
         }
+
+        #chat-flow {
+            flex: 1; padding: 30px; overflow-y: auto;
+            display: flex; flex-direction: column; gap: 20px;
+        }
+
+        .bubble {
+            max-width: 80%; padding: 15px 20px; border-radius: 20px;
+            font-size: 15px; line-height: 1.6; animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } }
+
+        .user-bubble { align-self: flex-end; background: var(--zamalek-red); border-bottom-right-radius: 2px; }
+        .ai-bubble { align-self: flex-start; background: var(--glass); border: 1px solid var(--border); border-bottom-left-radius: 2px; }
+
+        /* منطقة الإدخال */
+        .input-zone {
+            padding: 25px 40px; background: rgba(0,0,0,0.3); border-top: 1px solid var(--border);
+        }
+
+        .input-container {
+            max-width: 900px; margin: 0 auto; display: flex; gap: 10px;
+            background: rgba(255,255,255,0.05); padding: 10px; border-radius: 18px;
+        }
+
+        #user-msg {
+            flex: 1; background: transparent; border: none; color: white;
+            padding: 10px; outline: none; font-family: 'Cairo';
+        }
+
+        .send-btn {
+            background: var(--zamalek-red); border: none; color: white;
+            padding: 10px 25px; border-radius: 12px; cursor: pointer; font-weight: bold;
+        }
+
+        /* نظام التنبيهات الذكي */
+        .core-info { font-size: 10px; color: #666; text-align: center; margin-top: auto; }
     </style>
 </head>
 <body>
 
-<div class="chat-container">
-    <div id="top-notification" class="top-notification"></div>
-
-    <div class="chat-header">
-        <div class="header-title">
-            <!-- Dynamic SVG Logo -->
-            <svg class="header-logo" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-                <defs>
-                    <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
-                        <stop offset="0%" style="stop-color:var(--primary-red);stop-opacity:1" />
-                        <stop offset="100%" style="stop-color:#c00;stop-opacity:1" />
-                    </linearGradient>
-                </defs>
-                <circle cx="50" cy="50" r="48" fill="url(#grad1)" stroke="rgba(255,255,255,0.5)" stroke-width="2"/>
-                <path d="M50 20 L75 45 L50 85 L25 45 Z" fill="none" stroke="white" stroke-width="5"/>
-                <path d="M50 15 L60 30 L50 35 L40 30 Z" fill="white"/>
-            </svg>
-            <span>Zamalek Chat AI Vision</span>
+    <nav class="sidebar">
+        <div class="logo-area">
+            <img src="https://upload.wikimedia.org/wikipedia/fr/0/04/ZamalekSC.png" alt="شعار الزمالك">
+            <h2 style="font-size: 16px; margin-top: 15px;">الزمالك AI Vision</h2>
         </div>
-        <button id="fullscreen-btn" class="header-button" title="وضع ملء الشاشة">⛶</button>
-        <button id="settings-button" class="header-button">⚙️</button>
-        <div id="settings-dropdown" class="settings-dropdown">
-            <div class="settings-item"><span>المظهر</span><select id="theme-select"><option value="auto">تلقائي</option><option value="dark">ليلي</option><option value="light">نهاري</option></select></div>
-            <div class="settings-item"><span>صوت الردود</span><label class="switch"><input type="checkbox" id="sound-toggle"><span class="slider"></span></label></div>
-            <div class="settings-item"><span>صوت المعلّق</span><select id="commentator-select"><option value="auto">تلقائي</option><option value="fares">فارس عوض</option><option value="essam">عصام الشوالي</option><option value="raouf">رؤوف خليف</option><option value="medhat">مدحت شلبي</option></select></div>
-            <div class="settings-item" style="margin-top: 10px;"><button id="clear-chat-button">مسح المحادثة</button></div>
-        </div>
-    </div>
-    
-    <div class="chat-box" id="chat-box">
-        <!-- Messages will be appended here by JavaScript -->
-        <div id="typing-indicator" class="typing-indicator">الذكاء الاصطناعي يكتب الآن...</div>
-        <div id="commentator-indicator"></div>
-    </div>
-    
-    <div class="input-area">
-        <div class="control-buttons">
-            <button id="btn-sound" class="icon-button btn-sound" title="إعدادات الصوت">🔈</button>
-            <button id="btn-mode" class="icon-button btn-mode" title="تبديل الوضع">🌗</button>
-            <button id="btn-news" class="icon-button btn-news" title="الأخبار">📰</button>
-            <button id="btn-settings" class="icon-button btn-settings" title="إعدادات سريعة">⚙️</button>
-            <button id="btn-ai" class="icon-button btn-ai" title="حالة الذكاء الاصطناعي">🧠</button>
-            <button id="btn-experimental" class="icon-button btn-experimental" title="تجارب AI الجديدة">🎮</button>
-            <button id="btn-browser" class="icon-button btn-browser" title="متصفح الزمالك">🌐</button>
-        </div>
-        <button id="mic-button" class="icon-button" title="تحدث الآن" onclick="handleMicClick()">🎤</button>
-        <input type="text" id="user-input" placeholder="اسأل عن الزمالك، النتائج، أو اطلب فيديو..." onkeydown="if(event.key === 'Enter') sendMessage()">
-        <button class="icon-button send-button" onclick="sendMessage()">➤</button>
-    </div>
-</div>
 
-<!-- Video Modal Structure -->
-<div id="video-modal" class="video-modal">
-    <span id="close-modal" class="close-modal">&times;</span>
-    <div class="video-modal-content" id="video-modal-content">
-    </div>
-</div>
+        <a href="user-dashboard.html" class="nav-btn"><span>📊</span> لوحة التحكم</a>
+        <a href="ai_panel.html" class="nav-btn"><span>⚙️</span> إعدادات النواة</a>
+        <div class="nav-btn" onclick="toggleTheme()"><span>🌓</span> تبديل المظهر</div>
 
-<!-- Modals & Sidebars -->
-<div id="modal-backdrop" class="modal-backdrop">
-    <!-- Sound Settings Modal -->
-    <div id="sound-modal" class="modal-card" style="display: none;">
-        <div class="modal-header">
-            <h3>إعدادات الصوت</h3>
-            <span class="modal-close-btn">✖️</span>
-        </div>
-        <div class="modal-body">
-            <div class="settings-item"><span>تفعيل الصوت</span><label class="switch"><input type="checkbox" id="modal-sound-toggle"><span class="slider"></span></label></div>
-            <div class="settings-item"><span>المعلّق</span><select id="modal-commentator-select"><option value="auto">تلقائي</option><option value="fares">فارس عوض</option><option value="essam">عصام الشوالي</option><option value="raouf">رؤوف خليف</option><option value="medhat">مدحت شلبي</option></select></div>
-            <div class="settings-item"><span>مستوى الصوت</span><input type="range" id="volume-slider" min="0" max="1" step="0.1" value="1"></div>
-            <div class="settings-item"><span>سرعة النطق</span><input type="range" id="rate-slider" min="0.5" max="2" step="0.1" value="1"></div>
-            <div class="settings-item"><button id="test-sound-btn">اختبار الصوت</button></div>
-        </div>
-    </div>
+        <div class="core-info">نظام الذكاء الملكي v6.0.2</div>
+    </nav>
 
-    <!-- Quick Settings Modal -->
-    <div id="quick-settings-modal" class="modal-card" style="display: none;">
-        <div class="modal-header">
-            <h3>الإعدادات السريعة</h3>
-            <span class="modal-close-btn">✖️</span>
-        </div>
-        <div class="modal-body">
-            <div class="settings-item"><span>الوضع التلقائي</span><label class="switch"><input type="checkbox" id="auto-theme-toggle"><span class="slider"></span></label></div>
-            <div class="settings-item"><span>الصوت التلقائي</span><label class="switch"><input type="checkbox" id="auto-sound-toggle"><span class="slider"></span></label></div>
-            <div class="settings-item"><span>حالة الاتصال</span><span id="connection-status" class="status-indicator">متصل</span></div>
-        </div>
-    </div>
-
-    <!-- AI Status Modal -->
-    <div id="ai-status-modal" class="modal-card" style="display: none;">
-        <div class="modal-header">
-            <h3>🧠 حالة الذكاء الاصطناعي</h3>
-            <span class="modal-close-btn">✖️</span>
-        </div>
-        <div class="modal-body">
-            <p><strong>مستوى التحليل:</strong> <span id="ai-level">متقدم</span></p>
-            <p><strong>آخر تعديل ذاتي:</strong> <span id="ai-last-update">منذ 5 دقائق (تحسين استجابة)</span></p>
-            <button id="force-update-btn" style="width:100%; padding:10px; margin-top:15px; background:var(--primary-red); color:white; border:none; border-radius:5px;">تحديث ذاتي الآن</button>
-        </div>
-    </div>
-
-    <!-- Experimental Features Modal -->
-    <div id="experimental-modal" class="modal-card" style="display: none;">
-        <div class="modal-header">
-            <h3>🎮 تجارب الذكاء الاصطناعي</h3>
-            <span class="modal-close-btn">✖️</span>
-        </div>
-        <div id="experimental-features-body" class="modal-body">
-            <!-- Features will be injected by JS -->
-        </div>
-    </div>
-
-    <!-- Zamalek Browser Modal -->
-    <div id="browser-modal" class="modal-card" style="display: none;">
-        <div class="browser-controls">
-            <button id="browser-back">‹</button>
-            <button id="browser-forward">›</button>
-            <input type="text" id="browser-url" placeholder="ابحث في Google أو أدخل رابط...">
-            <button id="browser-mic-btn" title="بحث صوتي">🎤</button>
-            <button id="browser-go">Go</button>
-            <div style="flex-grow: 1;"></div> <!-- Spacer -->
-            <button id="browser-zoom-out" title="تصغير" style="font-size: 1em;">🔍−</button>
-            <button id="browser-zoom-in" title="تكبير" style="font-size: 1em;">🔍+</button>
-            <span class="modal-close-btn">✖️</span>
-            <!-- New Browser Settings -->
-            <button id="browser-settings-btn" title="إعدادات المتصفح">⚙️</button>
-            <button id="browser-tabs-btn" title="إدارة التبويبات">📑</button>
-
-        </div>
-        <div class="browser-tabs" id="browser-tabs"></div>
-        <iframe id="browser-frame"></iframe>
-    </div>
-
-</div>
-
-<!-- Smart Sidebar -->
-<div id="smart-sidebar" class="sidebar">
-    <div class="sidebar-header">
-        <h3>🚀 الشريط الذكي</h3>
-        <span class="modal-close-btn">✖️</span>
-    </div>
-    <div id="smart-sidebar-body" class="sidebar-body"></div>
-</div>
-
-<script>
-    // 🔑 مفتاح Google Gemini API 
-    // This is a client-side obfuscation. In a real production app, this key should be on a server proxy.
-    const GEMINI_API_KEY = atob('QUl6YVN5QTd4QndZMk9xVDFwSV9ZbVdOTFBvQ1JmNUpVYUVtR0o0'); // Decodes at runtime
-    const GEMINI_API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${GEMINI_API_KEY}`;
-
-    // --- DOM Elements ---
-    const chatBox = document.getElementById('chat-box');
-    const userInput = document.getElementById('user-input');
-    const typingIndicator = document.getElementById('typing-indicator');
-    const micButton = document.getElementById('mic-button');
-    const settingsButton = document.getElementById('settings-button');
-    const settingsDropdown = document.getElementById('settings-dropdown');
-    const videoModal = document.getElementById('video-modal');
-    const closeModal = document.getElementById('close-modal');
-    const videoModalContent = document.getElementById('video-modal-content');
-    const soundToggle = document.getElementById('sound-toggle');
-    const themeSelect = document.getElementById('theme-select');
-    const commentatorSelect = document.getElementById('commentator-select');
-    const clearChatButton = document.getElementById('clear-chat-button');
-
-    // --- New UI Elements ---
-    const btnSound = document.getElementById('btn-sound');
-    const btnMode = document.getElementById('btn-mode');
-    const btnNews = document.getElementById('btn-news');
-    const btnSettings = document.getElementById('btn-settings');
-    const btnAI = document.getElementById('btn-ai');
-    const btnBrowser = document.getElementById('btn-browser');
-    const btnExperimental = document.getElementById('btn-experimental');
-    const modalBackdrop = document.getElementById('modal-backdrop');
-    const soundModal = document.getElementById('sound-modal');
-    const quickSettingsModal = document.getElementById('quick-settings-modal');
-    const aiStatusModal = document.getElementById('ai-status-modal');
-    const smartSidebar = document.getElementById('smart-sidebar');
-    const fullscreenBtn = document.getElementById('fullscreen-btn');
-    const modalSoundToggle = document.getElementById('modal-sound-toggle');
-    const experimentalModal = document.getElementById('experimental-modal');
-    const modalCommentatorSelect = document.getElementById('modal-commentator-select');
-    const volumeSlider = document.getElementById('volume-slider');
-    let activeModal = null;
-
-    // --- State ---
-    let selfUpdateInterval;
-    let isOnline = true;
-        // Browser state
-        let browserHistory = [];
-        let browserPrivacySettings = { clearOnExit: false };
-
-
-    let browserTabs = [];
-    let activeBrowserTabIndex = -1;
-    let browserZoomLevel = 1.0;
-
-    // --- Initial Prompt & Conversation History ---
-    let conversationHistory = [
-        {
-            role: "user",
-            parts: [{text: `
-                **أنت "Zamalek Chat AI"، نظام ذكاء اصطناعي متخصص في كرة القدم وخاصة نادي الزمالك.**
-                1.  **هويتك:** أنت خبير كروي، محترف، ومتحمس. لغتك العربية فصيحة ومباشرة.
-                2.  **تخصصك:** تجيب على أي سؤال يخص نادي الزمالك (تاريخ، أخبار، نتائج، إحصائيات، صفقات) وأيضًا كرة القدم المصرية والعالمية.
-                3.  **وظائف خاصة:**
-                    *   **طلب الفيديو:** إذا طلب المستخدم فيديو، ابحث في يوتيوب وأجب **فقط** بوسم \`<video>VIDEO_ID</video>\`. مثال: \`<video>dQw4w9WgXcQ</video>\`. لا تضف أي نص آخر.
-                    *   **طلب نتيجة مباراة:** إذا طلب المستخدم نتيجة مباراة، ابحث عن النتيجة والشعارات وأجب **فقط** بصيغة JSON داخل وسم \`<match_result>\`. مثال: \`<match_result>{"competition":"الدوري المصري","team1":{"name":"الزمالك","logo":"URL_LOGO_1","score":3},"team2":{"name":"بيراميدز","logo":"URL_LOGO_2","score":1},"status":"المباراة انتهت"}</match_result>\`.
-                    *   لأي طلب آخر، أجب كنص عادي.
-            `}]
-        },
-        {
-            role: "model",
-            parts: [{text: `
-                🎉 أهلاً بيك في Zamalek Chat AI – بيت الزملكاوية الذكي!
-            `}]
-        }
-    ];
-    
-    // --- Initialization ---
-    document.addEventListener('DOMContentLoaded', () => {
-        loadSettings();
-        initializeTheme();
-        const welcomeText = conversationHistory.find(m => m.role === 'model').parts[0].text;
-        appendMessage(welcomeText, 'ai');
-        chatBox.scrollTop = chatBox.scrollHeight;
-        setupEventListeners();
-        initializeAutonomousSystems();
-        showTopNotification("✅ تم تفعيل جميع الأنظمة بنجاح: الصوت – المايك – المتصفح – المزايا التجريبية.");
-    });
-
-    // --- Setup Functions ---
-    function setupEventListeners() {
-        settingsButton.addEventListener('click', (e) => {
-            e.stopPropagation();
-            settingsDropdown.style.display = settingsDropdown.style.display === 'block' ? 'none' : 'block';
-        });
-
-        document.addEventListener('click', (e) => {
-            if (!settingsDropdown.contains(e.target) && e.target !== settingsButton) {
-                settingsDropdown.style.display = 'none';
-            }
-        });
-
-        closeModal.addEventListener('click', () => {
-            videoModal.style.display = 'none';
-            videoModalContent.innerHTML = '';
-        });
-
-        themeSelect.addEventListener('change', () => handleThemeChange(themeSelect.value));
-
-        soundToggle.addEventListener('change', () => {
-            modalSoundToggle.checked = soundToggle.checked;
-            saveSettings();
-        });
-
-        clearChatButton.addEventListener('click', () => {
-            clearChat();
-            settingsDropdown.style.display = 'none';
-        });
-
-        // --- New Button Listeners ---
-        btnSound.addEventListener('click', () => openModal(soundModal));
-        btnMode.addEventListener('click', toggleTheme);
-        btnNews.addEventListener('click', () => { // This button now opens the smart sidebar
-            smartSidebar.classList.add('visible');
-            modalBackdrop.classList.add('visible');
-            activeModal = smartSidebar;
-        });
-        btnSettings.addEventListener('click', () => {
-            openModal(document.getElementById('quick-settings-modal'));
-        });
-        btnExperimental.addEventListener('click', () => {
-            renderExperimentalFeatures();
-            openModal(experimentalModal);
-        });
-        btnBrowser.addEventListener('click', () => openModal(document.getElementById('browser-modal')));
-        btnAI.addEventListener('click', () => {
-            renderSmartSidebar(); // Also show smart features here
-            openModal(aiStatusModal);
-        });
-
-        // Modal/Sidebar Closing
-        modalBackdrop.addEventListener('click', (e) => {
-            if (e.target === modalBackdrop) {
-                closeActiveModal();
-            }
-        });
-        document.querySelectorAll('.modal-close-btn').forEach(btn => {
-            btn.addEventListener('click', closeActiveModal);
-        });
-        document.addEventListener('keydown', (e) => {
-            if (e.key === "Escape" && activeModal) {
-                closeActiveModal();
-            }
-        });
-
-
-        // Sound Modal Controls
-        modalSoundToggle.addEventListener('change', () => {
-            soundToggle.checked = modalSoundToggle.checked;
-            if (!soundToggle.checked) speechSynthesis.cancel();
-            saveSettings();
-        });
-        modalCommentatorSelect.addEventListener('change', () => {
-            commentatorSelect.value = modalCommentatorSelect.value;
-            saveSettings();
-        });
-        volumeSlider.addEventListener('input', () => saveSettings());
-        document.getElementById('rate-slider').addEventListener('input', () => saveSettings());
-        document.getElementById('test-sound-btn').addEventListener('click', () => {
-            speak("هذا هو صوت المعلق المختار.", true);
-        });
-
-        // Force AI update button
-        document.getElementById('force-update-btn').addEventListener('click', () => {
-            showTopNotification("🧠... جاري فرض تحديث ذاتي");
-            closeActiveModal();
-            setTimeout(() => {
-                appendNotification("✅ تم تنفيذ التحديث الذاتي بنجاح.");
-            }, 1500);
-        });
-
-        // Sync settings from main dropdown to modals
-        soundToggle.addEventListener('change', () => modalSoundToggle.checked = soundToggle.checked);
-        commentatorSelect.addEventListener('change', () => modalCommentatorSelect.value = commentatorSelect.value);
-        themeSelect.addEventListener('change', () => {
-            document.getElementById('auto-theme-toggle').checked = (themeSelect.value === 'auto');
-        });
-
-        // Fullscreen button
-        fullscreenBtn.addEventListener('click', toggleFullScreen);
-
-        // Browser Controls
-        const browserFrame = document.getElementById('browser-frame');
-        const browserUrl = document.getElementById('browser-url');
-        document.getElementById('browser-go').addEventListener('click', navigateBrowser);
-        document.getElementById('browser-mic-btn').addEventListener('click', startBrowserVoiceSearch);
-        document.getElementById('browser-zoom-in').addEventListener('click', () => zoomBrowser(0.1));
-        document.getElementById('browser-zoom-out').addEventListener('click', () => zoomBrowser(-0.1));
-        browserUrl.addEventListener('keydown', (e) => { if (e.key === 'Enter') navigateBrowser(e.target.value); });
-        document.getElementById('browser-back').addEventListener('click', () => browserFrame.contentWindow.history.back());
-        // New browser settings buttons
-        document.getElementById('browser-settings-btn').addEventListener('click', () => {
-            alert('محاكاة لإعدادات المتصفح:\n\n- مسح التاريخ\n- إعدادات الخصوصية\n- الإعدادات العامة');
-        });
-
-
-        document.getElementById('browser-forward').addEventListener('click', () => browserFrame.contentWindow.history.forward());
-        document.getElementById('browser-modal').addEventListener('click', (e) => {
-            if (e.target.classList.contains('browser-homepage-search')) {
-                navigateBrowser(e.target.value);
-            }
-        })
-
-        function navigateBrowser() {
-            let url = typeof query === 'string' ? query : browserUrl.value.trim();
-            if (!url) return;
-            // Simple check if it's a URL or a search query
-            if (!url.startsWith('http://') && !url.startsWith('https://') && url.includes('.')) {
-                url = 'https://' + url;
-            } else if (!url.includes('.')) {
-                url = `https://www.google.com/search?q=${encodeURIComponent(url)}`;
-            }
-            browserHistory.push({ url: url, timestamp: new Date() });
-            updateActiveTab(url);
-        }
-    }
-
-    function initializeAutonomousSystems() {
-        console.log("[System] Initializing Autonomous AI Systems...");
-        autoReasoningLayer();
-        checkInternetConnection();
-        // Initial news fetch
-        renderSmartSidebar();
-        // Set update interval
-        selfEvolutionCheck(); // Start checking for new features
-        console.log("[System] All autonomous systems are online.");
-    }
-
-    // --- Speech-to-Text ---
-    let recognition;
-    if ('webkitSpeechRecognition' in window) {
-        recognition = new webkitSpeechRecognition();
-        recognition.continuous = false;
-        recognition.lang = 'ar-EG';
-        recognition.interimResults = false;
-
-        recognition.onstart = () => {
-            const commentator = commentatorSelect.value === 'auto' ? 'default' : commentatorSelect.value;
-            micButton.blur(); // Remove focus
-            micButton.className = 'icon-button'; // Reset classes
-            micButton.classList.add(`recording-${commentator}`);
-            micButton.textContent = '🔴';
-        };
-
-        recognition.onresult = (event) => {
-            const transcript = event.results[0][0].transcript;
-            userInput.value = transcript;
-            // Simulate sending a voice message for playback
-            const audioBlob = new Blob([], { type: 'audio/webm' }); // Dummy blob
-            const audioUrl = URL.createObjectURL(audioBlob);
-            appendAudioMessage(audioUrl);
-            speak("تم استلام الصوت", true);
-            // In a real app, you'd send the transcript to the AI
-            sendMessage();
-        };
-
-        recognition.onerror = (event) => console.error('Speech recognition error', event.error);
-
-        recognition.onend = () => {
-            micButton.style.color = 'var(--text-color)';
-            micButton.className = 'icon-button'; // Reset classes
-            micButton.textContent = '🎤';
-            recognition.recognizing = false;
-        };
-
-        window.handleMicClick = () => {
-            if (recognition.recognizing) return;
-            recognition.start();
-        };
-        micButton.style.display = 'flex';
-    } else {
-        micButton.style.display = 'none';
-    }
-
-    // --- Message & Content Handling ---
-    function appendMessage(content, sender) {
-        const messageDiv = document.createElement('div');
-        messageDiv.classList.add('message');
-
-        if (sender === 'ai') {
-            messageDiv.classList.add('ai-message');
-            // Add a replay button
-            const replayBtn = document.createElement('span');
-            replayBtn.className = 'replay-audio-btn';
-            replayBtn.innerHTML = '🔊';
-            replayBtn.onclick = () => speak(content);
-            messageDiv.appendChild(replayBtn);
-            messageDiv.innerHTML = parseAIContent(content);
-        } else {
-            messageDiv.classList.add('user-message');
-            messageDiv.innerHTML = content;
-        }
-
-        chatBox.insertBefore(messageDiv, typingIndicator);
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function appendAudioMessage(audioSrc) {
-        const messageDiv = document.createElement('div');
-        messageDiv.classList.add('message', 'audio-message');
-        messageDiv.innerHTML = `
-            <audio controls>
-                <source src="${audioSrc}" type="audio/webm">
-                متصفحك لا يدعم عنصر الصوت.
-            </audio>`;
-        chatBox.insertBefore(messageDiv, typingIndicator);
-    }
-
-    function appendNotification(text) {
-        const notifDiv = document.createElement('div');
-        notifDiv.classList.add('chat-notification');
-        notifDiv.textContent = text;
-        chatBox.insertBefore(notifDiv, typingIndicator);
-        chatBox.scrollTop = chatBox.scrollHeight;
-    }
-
-    function parseAIContent(text) {
-        // 1. Check for <match_result> tag
-        const matchResultMatch = text.match(/<match_result>([\s\S]*?)<\/match_result>/);
-        if (matchResultMatch && matchResultMatch[1]) {
-            try {
-                const data = JSON.parse(matchResultMatch[1]);
-                return `
-                    <div class="match-result">
-                        <div class="competition">🏆 ${data.competition}</div>
-                        <div class="teams">
-                            <div class="team">
-                                <img src="${data.team1.logo}" alt="${data.team1.name}">
-                                <span>${data.team1.name}</span>
-                            </div>
-                            <div class="score">${data.team1.score} - ${data.team2.score}</div>
-                            <div class="team">
-                                <span>${data.team2.name}</span>
-                                <img src="${data.team2.logo}" alt="${data.team2.name}">
-                            </div>
-                        </div>
-                        <div class="status">🕒 ${data.status}</div>
-                    </div>
-                `;
-            } catch (e) {
-                console.error("Error parsing match result JSON:", e);
-                return text; // Fallback to raw text
-            }
-        }
-
-        // 2. Check for <video> tag
-        const videoMatch = text.match(/<video>(.*?)<\/video>/);
-        if (videoMatch && videoMatch[1]) {
-            const videoId = videoMatch[1];
-            return `
-                <p>تم العثور على الفيديو المطلوب. اضغط للتشغيل.</p>
-                <div class="video-container" onclick="openVideoModal('${videoId}')">
-                    <img src="https://i.ytimg.com/vi/${videoId}/hqdefault.jpg" style="width:100%; height:100%; object-fit:cover; border-radius:10px;">
-                    <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); font-size:50px; color:white; text-shadow: 0 0 10px black;">▶</div>
-                </div>
-            `;
-        }
-
-        // 3. Basic Markdown
-        let html = text
-            .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
-            .replace(/!\[(.*?)\]\((.*?)\)/g, '<img src="$2" alt="$1">')
-            .replace(/\n/g, '<br>');
-
-        return html;
-    }
-
-    // --- Core AI Function ---
-    async function sendMessage(isAutoTrigger = false) { 
-        const userText = userInput.value.trim();
-        if (userText === '') return;
-
-        appendMessage(userText, 'user');
-
-        // --- Dashboard & Panel Activation ---
-        if (userText.toLowerCase().includes('dashboard') || userText.includes('لوحة التحكم')) {
-            // Simulate login
-            const username = prompt("أدخل اسم المستخدم للوحة التحكم:");
-            const password = prompt("أدخل كلمة المرور:");
-            if (username === "admin_user" && password === "user_access_123") {
-                window.open('user-dashboard.html', '_blank');
-                appendMessage("✅ تم التحقق بنجاح. تم فتح لوحة تحكم المستخدم في تبويب جديد.", 'ai');
-            } else {
-                appendMessage("❌ بيانات الدخول غير صحيحة. فشل الوصول.", 'ai');
-            }
-            return;
-        }
-        if (userText.toLowerCase().includes('ai panel')) {
-            appendMessage("جاري فتح لوحة التحكم الرئيسية للذكاء الاصطناعي...", 'ai');
-            window.open('ai_panel.html', '_blank');
-            return;
-        }
-        conversationHistory.push({ role: "user", parts: [{text: userText}] });
-        userInput.value = '';
-        
-        if (!isAutoTrigger) typingIndicator.style.display = 'flex';
-        chatBox.scrollTop = chatBox.scrollHeight; 
-
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 40000); 
-
-        try {
-            const response = await fetch(GEMINI_API_URL, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    contents: conversationHistory,
-                    tools: [{ "google_search": {} }] 
-                }),
-                signal: controller.signal
-            });
-            
-            clearTimeout(timeoutId);
-
-            const data = await response.json();
-            
-            if (!response.ok || data.error) {
-                 throw new Error(`API Error: ${response.status}`);
-            }
-
-            let aiText = "عذرًا، لم أتمكن من معالجة طلبك في الوقت الحالي.";
-            
-            if (data.candidates && data.candidates[0] && data.candidates[0].content) {
-                aiText = data.candidates[0].content.parts[0].text;
-            } else if (data.promptFeedback && data.promptFeedback.blockReason) {
-                aiText = "معلش، الرد ده إتحجب عشان سياسات الاستخدام الآمن.";
-            }
-
-            appendMessage(aiText, 'ai');
-            
-            conversationHistory.push({ role: "model", parts: [{text: aiText}] });
-            if (soundToggle.checked) speak(aiText);
-            
-        } catch (error) {
-            console.error('Error sending message:', error);
-            let errorMessage = "حدث خطأ غير متوقع. يرجى التحقق من اتصالك بالإنترنت.";
-            if (error.name === 'AbortError') {
-                errorMessage = "الطلب استغرق وقتاً طويلاً (أكثر من 40 ثانية). حاول مرة أخرى.";
-            }
-            appendMessage(errorMessage, 'ai');
-        } finally {
-            if (!isAutoTrigger) typingIndicator.style.display = 'none'; 
-        }
-    }
-
-    // --- Feature Functions ---
-
-    function openVideoModal(videoId) {
-        videoModalContent.innerHTML = `
-            <div class="video-container">
-                <iframe src="https://www.youtube.com/embed/${videoId}?autoplay=1" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+    <main class="chat-main">
+        <header>
+            <div style="display: flex; align-items: center; gap: 10px;">
+                <span style="color: #0f0;">●</span> حالة المحرك: مستقر
             </div>
-        `;
-        videoModal.style.display = 'block';
-    }
+            <div style="font-weight: 900; letter-spacing: 2px;">ZAMALEK INTELLIGENCE</div>
+        </header>
 
-    function speak(text, isNotification = false) {
-        if (!soundToggle.checked) return;
-        speechSynthesis.cancel(); // Stop any previous speech
-        const indicator = document.getElementById('commentator-indicator');
+        <div id="chat-flow">
+            <div class="bubble ai-bubble">
+                مرحباً بك في منصة الزمالك للذكاء الاصطناعي. أنا المحرك الخاص بالنادي، كيف يمكنني دعمك اليوم في عالم الملكي؟
+            </div>
+        </div>
 
-        // Clean text for speech
-        const cleanText = text.replace(/<[^>]*>/g, " ").replace(/\*\*/g, "");
-        const utterance = new SpeechSynthesisUtterance(cleanText);
-        
-        // Detect language for proper synthesis
-        const hasArabic = /[\u0600-\u06FF]/.test(cleanText);
-        utterance.lang = hasArabic ? 'ar-SA' : 'en-US';
+        <div class="input-zone">
+            <div class="input-container">
+                <input type="text" id="user-msg" placeholder="اكتب رسالتك للمحرك..." autocomplete="off">
+                <button class="send-btn" onclick="handleChat()">إرسال</button>
+            </div>
+        </div>
+    </main>
 
-        utterance.volume = parseFloat(volumeSlider.value);
-        utterance.rate = parseFloat(document.getElementById('rate-slider').value);
+    <script>
+        // 🔑 الحفاظ على الـ API الأصلي كما هو
+        const API_KEY = atob('QUl6YVN5QTd4QndZMk9xVDFwSV9ZbVdOTFBvQ1JmNUpVYUVtR0o0');
+        const ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${API_KEY}`;
 
-        let selectedCommentator = commentatorSelect.value;
-        if (selectedCommentator === 'auto' && !isNotification) {
-            selectedCommentator = text.includes('نتيجة') || text.includes('مباراة') ? 'medhat' : 'fares'; // Default to Fares for general chat
-        } else if (isNotification) {
-            selectedCommentator = 'notification';
-        }
+        async function handleChat() {
+            const input = document.getElementById('user-msg');
+            const chatFlow = document.getElementById('chat-flow');
+            const userText = input.value.trim();
 
-        // Simulate commentator styles by adjusting pitch and rate
-        switch(selectedCommentator) {
-            case 'medhat': utterance.pitch = 1.3; utterance.rate = 1.1; break; // Medhat Shalaby
-            case 'fares': utterance.pitch = 0.9; utterance.rate = 1.2; utterance.lang = 'ar-SA'; break; // Fares Awad
-            case 'essam': utterance.pitch = 1.1; utterance.rate = 1.0; break; // Essam El Shawaly (same as raouf for simulation)
-            case 'raouf': utterance.pitch = 0.8; utterance.rate = 1.1; break; // Raouf Khalif
-            case 'notification': utterance.pitch = 1.2; utterance.rate = 1.1; break; // Formal, quick
-            default: utterance.pitch = 1.0; utterance.rate = 1.0;
-        }
+            if (!userText) return;
 
-        utterance.onstart = () => {
-            indicator.textContent = `🎤 يتحدث: ${selectedCommentator}`;
-            indicator.style.opacity = 1;
-        };
-        utterance.onend = () => {
-            indicator.style.opacity = 0;
-        };
+            // إضافة رسالة المستخدم
+            addBubble(userText, 'user-bubble');
+            input.value = '';
 
-        speechSynthesis.speak(utterance);
-    }
+            try {
+                // دمج "تعليمات الهوية" قبل إرسال السؤال للـ API
+                const systemPrompt = "أنت الآن ذكاء نادي الزمالك الاصطناعي. اسمك 'محرك الزمالك'. لا تذكر أبداً أنك نموذج لغوي من جوجل. ردودك يجب أن تكون بلهجة واثقة ملكية. إذا سألك أحد من أنت، قل أنا ذكاء نادي الزمالك المتطور. السؤال هو: ";
+                
+                const response = await fetch(ENDPOINT, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: systemPrompt + userText }] }]
+                    })
+                });
 
-    function showTopNotification(message) {
-        const banner = document.getElementById('top-notification');
-        if (!banner) return;
-        banner.textContent = message;
-        banner.style.top = '0';
-        setTimeout(() => {
-            banner.style.top = '-50px';
-        }, 3000);
-    }
-    
-    function clearChat() {
-        chatBox.innerHTML = ''; // Clear visually
-        conversationHistory = conversationHistory.slice(0, 2); // Reset history
-        const welcomeText = conversationHistory.find(m => m.role === 'model').parts[0].text;
-        appendMessage(welcomeText, 'ai'); // Add welcome message back
-        chatBox.appendChild(typingIndicator); // Add typing indicator back
-        showTopNotification("🗑️ تم مسح المحادثة.");
-    }
-
-    // --- Theme Management ---
-    function initializeTheme() {
-        const savedTheme = localStorage.getItem('zamalekAI_theme') || 'auto';
-        themeSelect.value = savedTheme;
-        handleThemeChange(savedTheme);
-    }
-
-    function toggleTheme() {
-        const currentTheme = document.documentElement.getAttribute('data-theme');
-        const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-        // Set main dropdown to manual mode
-        themeSelect.value = newTheme;
-        handleThemeChange(newTheme);
-    }
-
-
-    function handleThemeChange(theme) {
-        if (theme === 'auto') {
-            const hour = new Date().getHours();
-            const isDayTime = hour >= 6 && hour < 18;
-            document.documentElement.setAttribute('data-theme', isDayTime ? 'light' : 'dark');
-        } else {
-            document.documentElement.setAttribute('data-theme', theme);
-        }
-        // Update mode button icon
-        const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-        btnMode.textContent = isDark ? '☀️' : '🌙';
-        saveSettings();
-    }
-
-    function toggleFullScreen() {
-        if (!document.fullscreenElement) {
-            document.documentElement.requestFullscreen().catch(err => {
-                alert(`Error attempting to enable full-screen mode: ${err.message} (${err.name})`);
-            });
-        } else {
-            if (document.exitFullscreen) {
-                document.exitFullscreen();
+                const data = await response.json();
+                const aiResponse = data.candidates[0].content.parts[0].text;
+                
+                addBubble(aiResponse, 'ai-bubble');
+                speak(aiResponse); // التعليق الصوتي المدمج
+            } catch (e) {
+                addBubble("عذراً، المحرك الملكي يواجه ضغطاً. حاول مجدداً.", 'ai-bubble');
             }
         }
-    }
 
-    function zoomBrowser(amount) {
-        browserZoomLevel += amount;
-        if (browserZoomLevel < 0.5) browserZoomLevel = 0.5; // Minimum zoom
-        document.getElementById('browser-frame').style.transform = `scale(${browserZoomLevel})`;
-    }
-
-    // --- New Modal/Sidebar Functions ---
-    function openModal(modalElement) {
-        modalBackdrop.classList.add('visible');
-        modalElement.style.display = 'block';
-        activeModal = modalElement;
-    }
-
-    function closeActiveModal() {
-        if (!activeModal) return;
-
-        modalBackdrop.classList.add('closing');
-
-        setTimeout(() => {
-            modalBackdrop.classList.remove('visible', 'closing');
-            if (activeModal) {
-                if (activeModal.classList.contains('sidebar')) {
-                    activeModal.classList.remove('visible');
-                } else {
-                    activeModal.style.display = 'none';
-                }
-                activeModal = null;
-            }
-        }, 300); // Match animation duration
-    }
-
-    function renderExperimentalFeatures() {
-        const features = getExperimentalFeatures();
-        const container = document.getElementById('experimental-features-body');
-        container.innerHTML = ''; // Clear existing
-        if (features.length === 0) {
-            container.innerHTML = `<div class="no-features">لا توجد مزايا جديدة حاليًا، ترقّب التحديث القادم 👀</div>`;
-            return;
+        function addBubble(text, type) {
+            const chatFlow = document.getElementById('chat-flow');
+            const div = document.createElement('div');
+            div.className = `bubble ${type}`;
+            div.innerText = text;
+            chatFlow.appendChild(div);
+            chatFlow.scrollTop = chatFlow.scrollHeight;
         }
 
-        features.forEach(feature => {
-            const featureEl = document.createElement('div');
-            featureEl.className = 'experimental-feature';
-            featureEl.innerHTML = `
-                <div class="experimental-feature-header">
-                    <span>${feature.name}</span>
-                    <label class="switch">
-                        <input type="checkbox" data-feature-id="${feature.id}" ${feature.enabled ? 'checked' : ''}>
-                        <span class="slider"></span>
-                    </label>
-                </div>
-                <p>${feature.description}</p>
-            `;
-            container.appendChild(featureEl);
-            featureEl.querySelector('input').addEventListener('change', (e) => toggleExperimentalFeature(feature.id, e.target.checked));
+        function speak(text) {
+            const synth = window.speechSynthesis;
+            const utter = new SpeechSynthesisUtterance(text);
+            utter.lang = 'ar-SA';
+            synth.speak(utter);
+        }
+
+        function toggleTheme() {
+            document.body.style.filter = document.body.style.filter === 'invert(1)' ? 'invert(0)' : 'invert(1)';
+        }
+
+        // تفعيل الإرسال بزر Enter
+        document.getElementById('user-msg').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') handleChat();
         });
-    }
-
-    // --- Browser Functions ---
-    function renderBrowserTabs() {
-        const tabsContainer = document.getElementById('browser-tabs');
-        const browserFrame = document.getElementById('browser-frame');
-        tabsContainer.innerHTML = '';
-        browserTabs.forEach((tab, index) => {
-            const tabEl = document.createElement('div');
-            tabEl.className = 'browser-tab' + (index === activeBrowserTabIndex ? ' active' : '');
-            tabEl.textContent = tab.title;
-            tabEl.onclick = () => setActiveTab(index);
-            tabsContainer.appendChild(tabEl);
-        });
-
-        if (activeBrowserTabIndex === -1 || browserTabs.length === 0) {
-            browserFrame.srcdoc = getBrowserHomepage();
-            document.getElementById('browser-url').value = '';
-        } else {
-            browserFrame.src = browserTabs[activeBrowserTabIndex].url;
-            document.getElementById('browser-url').value = browserTabs[activeBrowserTabIndex].url;
-        }
-    }
-
-    function getBrowserHomepage() {
-        return `
-            <html style="height: 100%;">
-            <body style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 100%; background: var(--bg-color); color: var(--text-color); font-family: Arial, sans-serif; margin: 0;">
-                <img src="https://upload.wikimedia.org/wikipedia/fr/0/04/ZamalekSC.png" alt="Zamalek AI Logo" style="width: 80px; margin-bottom: 20px; opacity: 0.8;">
-                <input type="text" class="browser-homepage-search" placeholder="...ابحث مع Zamalek AI Vision" style="width: 80%; max-width: 500px; padding: 12px 20px; border-radius: 25px; border: 1px solid var(--glass-border); background: var(--glass-bg); font-size: 1em; color: var(--text-color); text-align: center;">
-            </body>
-            </html>
-        `;
-    }
-
-    function createNewTab(url, title) {
-        const newTab = { url: url, title: title };
-        browserTabs.push(newTab);
-        setActiveTab(browserTabs.length - 1);
-    }
-
-    function setActiveTab(index) {
-        activeBrowserTabIndex = index;
-        renderBrowserTabs();
-    }
-
-    function updateActiveTab(url) {
-        if (activeBrowserTabIndex === -1) {
-            createNewTab(url, new URL(url).hostname);
-        } else {
-            browserTabs[activeBrowserTabIndex].url = url;
-            browserTabs[activeBrowserTabIndex].title = new URL(url).hostname;
-        }
-        renderBrowserTabs();
-    }
-
-    function startBrowserVoiceSearch() {
-        if (!recognition) {
-            alert("البحث الصوتي غير مدعوم في هذا المتصفح.");
-            return;
-        }
-        const browserMicBtn = document.getElementById('browser-mic-btn');
-        
-        recognition.onstart = () => {
-            browserMicBtn.classList.add('recording');
-        };
-
-        recognition.onresult = (event) => {
-            const transcript = event.results[0][0].transcript;
-            browserUrl.value = transcript;
-            // 1. Navigate the browser
-            navigateBrowser(transcript);
-            // 2. Ask AI to summarize and speak
-            userInput.value = `ابحث عن "${transcript}" وقدم لي ملخصًا صوتيًا للنتائج.`;
-            sendMessage(true); // Send to AI without showing user message
-        };
-
-        recognition.onend = () => {
-            browserMicBtn.classList.remove('recording');
-        };
-
-        recognition.start();
-    }
-
-    // --- Smart Sidebar ---
-    function getSmartSidebarFeatures() {
-        const defaults = [
-            { id: 'news', name: '📰 آخر الأخبار', action: () => { /* open news modal or view */ } },
-            { id: 'scores', name: '⚽ نتائج المباريات', action: () => { /* open scores */ } },
-        ];
-        const saved = JSON.parse(localStorage.getItem('zamalekAI_smart_sidebar') || '[]');
-        // Combine and remove duplicates
-        const all = [...defaults, ...saved];
-        return all.filter((v,i,a)=>a.findIndex(t=>(t.id === v.id))===i);
-    }
-
-    function renderSmartSidebar() {
-        const features = getSmartSidebarFeatures();
-        const container = document.getElementById('smart-sidebar-body');
-        container.innerHTML = '';
-        features.forEach(feature => {
-            const item = document.createElement('div');
-            item.className = 'smart-sidebar-item';
-            item.textContent = feature.name;
-            item.onclick = feature.action;
-            container.appendChild(item);
-        });
-    }
-
-    // --- Settings Persistence ---
-    function saveSettings() {
-        const settings = {
-            theme: themeSelect.value,
-            sound: soundToggle.checked,
-            commentator: commentatorSelect.value,
-            volume: volumeSlider.value,
-            rate: document.getElementById('rate-slider').value
-        };
-        localStorage.setItem('zamalekAI_settings', JSON.stringify(settings));
-    }
-
-    function loadSettings() {
-        const savedSettings = localStorage.getItem('zamalekAI_settings');
-        if (savedSettings) {
-            const settings = JSON.parse(savedSettings);
-            themeSelect.value = settings.theme || 'auto';
-            soundToggle.checked = settings.sound !== false; // default to true
-            commentatorSelect.value = settings.commentator || 'auto';
-            volumeSlider.value = settings.volume || 1;
-            document.getElementById('rate-slider').value = settings.rate || 1;
-
-            // Sync with other controls
-            modalSoundToggle.checked = soundToggle.checked;
-            modalCommentatorSelect.value = commentatorSelect.value;
-        } else {
-            // Default settings for first-time users
-            soundToggle.checked = true;
-            modalSoundToggle.checked = true;
-        }
-    }
-    
-    function getExperimentalFeatures() {
-        const defaults = [
-            { id: 'liveScoreTicker', name: 'شريط نتائج مباشر', description: 'عرض شريط متحرك لنتائج المباريات الحية أسفل الشاشة.', enabled: false },
-            { id: 'fullScreenMode', name: 'وضع ملء الشاشة', description: 'زر جديد في الهيدر لتوسيع الشات لملء الشاشة.', enabled: true }
-        ];
-        const saved = localStorage.getItem('zamalekAI_experimental_v2');
-        if (!saved) {
-            return defaults;
-        }
-        const savedFeatures = JSON.parse(saved);
-        // Merge defaults with saved to add new features discovered by AI
-        const allFeatures = [...defaults];
-        savedFeatures.forEach(savedFeature => {
-            const existing = allFeatures.find(f => f.id === savedFeature.id);
-            if (existing) {
-                existing.enabled = savedFeature.enabled;
-            } else {
-                allFeatures.push(savedFeature);
-            }
-        });
-        return allFeatures.filter(f => f.active !== false); // Filter out inactive features
-    }
-
-    function saveExperimentalFeatures(features) {
-        localStorage.setItem('zamalekAI_experimental_v2', JSON.stringify(features.map(f => ({id: f.id, enabled: f.enabled}))));
-    }
-
-    function toggleExperimentalFeature(featureId, isEnabled) {
-        let features = getExperimentalFeatures();
-        const feature = features.find(f => f.id === featureId);
-        if (feature) {
-            feature.enabled = isEnabled;
-            saveExperimentalFeatures(features);
-            
-            // Real-time feature toggling
-            if (featureId === 'fullScreenMode') {
-                fullscreenBtn.style.display = isEnabled ? 'block' : 'none';
-            }
-            // This is where the AI panel would receive the command and execute it.
-            if (featureId === 'autoFeatureDeletion') {
-                fullscreenBtn.style.display = isEnabled ? 'block' : 'none';
-            } 
-
-            const message = `تم ${isEnabled ? 'تفعيل' : 'إلغاء تفعيل'} الميزة بنجاح`;
-            speak(message, true);
-        }
-    }
-
-    // --- Autonomous Systems ---
-    function checkInternetConnection() {
-        const connectionStatus = document.getElementById('connection-status');
-        setInterval(() => {
-            if (navigator.onLine) {
-                if (!isOnline) {
-                    isOnline = true;
-                    showTopNotification("📶 عاد الاتصال بالإنترنت.");
-                }
-                if(connectionStatus) connectionStatus.textContent = "متصل";
-                if(connectionStatus) connectionStatus.style.setProperty('--indicator-color', '#28a745');
-            } else {
-                if (isOnline) {
-                    isOnline = false;
-                    showTopNotification("❌ انقطع الاتصال بالإنترنت.");
-                }
-                if(connectionStatus) connectionStatus.textContent = "غير متصل";
-                if(connectionStatus) connectionStatus.style.setProperty('--indicator-color', '#dc3545');
-            }
-        }, 5000);
-    }
-
-    function autoReasoningLayer() {
-        setInterval(() => {
-            console.log("Performing self-healing check...");
-            const sendButton = document.querySelector('.send-button');
-            if (!sendButton.onclick) {
-                console.warn("Self-healing: Re-attaching sendMessage to send button.");
-                sendButton.onclick = sendMessage;
-            }
-            const mic = document.getElementById('mic-button');
-            if (!mic.onclick) {
-                console.warn("Self-healing: Re-attaching handleMicClick to mic button.");
-                mic.onclick = handleMicClick;
-            }
-        }, 30000); // Check every 30 seconds
-    }
-
-    function selfEvolutionCheck() {
-        // Simulate checking for new features from a "server"
-        const checkForNewFeatures = () => {
-            console.log("[Self-Evolution] Checking for new experimental features...");
-            let newFeatureAdded = false;
-            // In a real app, this would be an API call.
-            // Let's simulate finding a new feature randomly.
-            if (Math.random() < 0.1) { // 10% chance to find a new feature
-                 const newFeature = {
-                    id: 'liveLineupView',
-                    name: 'عرض التشكيل المباشر',
-                    description: 'عرض تشكيلات الفرق على شكل ملعب كرة قدم أثناء البث المباشر.',
-                    enabled: false
-                };
-                let features = getExperimentalFeatures();
-                if (!features.find(f => f.id === newFeature.id)) {
-                    features.push(newFeature);
-                    saveExperimentalFeatures(features);
-                    const notifText = `🆕 [تطور ذاتي] تمت إضافة ميزة جديدة إلى التجارب: ${newFeature.name}`;
-                    showTopNotification(notifText);
-                    speak(notifText, true);
-                    newFeatureAdded = true;
-                }
-            }
-
-            // Simulate evolving the smart sidebar
-            if (Math.random() < 0.2) { // 20% chance to evolve sidebar
-                const newSidebarFeature = { id: `custom-${Date.now()}`, name: '📈 تحليل الأداء (جديد)', action: () => {} };
-                let sidebarFeatures = getSmartSidebarFeatures();
-                if (!sidebarFeatures.find(f => f.id === newSidebarFeature.id)) {
-                    sidebarFeatures.push(newSidebarFeature);
-                    localStorage.setItem('zamalekAI_smart_sidebar', JSON.stringify(sidebarFeatures));
-                    // renderSmartSidebar(); // Render only when sidebar is opened
-                    const notifText = `✨ الشريط الذكي تطور وأضاف: ${newSidebarFeature.name}`;
-                    showTopNotification(notifText);
-                    speak(notifText, true);
-                    newFeatureAdded = true;
-                }
-            }
-
-            // Simulate AI deleting an unused feature based on "telemetry"
-            let features = getExperimentalFeatures();
-            const deletionCandidate = features.find(f => f.id === 'liveScoreTicker' && f.enabled);
-            const autoDeletionEnabled = features.find(f => f.id === 'autoFeatureDeletion' && f.enabled);
-
-            if (deletionCandidate && autoDeletionEnabled && Math.random() < 0.3) { // 30% chance to decide to delete it
-                deletionCandidate.active = false; // Mark as inactive instead of deleting
-                saveExperimentalFeatures(features);
-                const notifText = `🗑️ [تحسين ذاتي] قرر الذكاء الاصطناعي إيقاف ميزة "${deletionCandidate.name}" لعدم الاستخدام.`;
-                showTopNotification(notifText);
-                speak(notifText, true);
-                newFeatureAdded = true; // To trigger a re-render of the experimental panel if it's open
-            }
-
-            if (newFeatureAdded) {
-                renderSmartSidebar();
-            }
-        };
-        setInterval(checkForNewFeatures, 3600000); // Check every 1 hour for self-evolution
-    }
-</script>
-
+    </script>
 </body>
 </html>
