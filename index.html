@@ -3,115 +3,112 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zamalek AI | النواة الملكية</title> 
+    <title>Zamalek AI Vision | النواة الملكية</title> 
     <link rel="icon" href="https://upload.wikimedia.org/wikipedia/fr/0/04/ZamalekSC.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --bg: #0a0a0a; --red: #e41e26; --glass: rgba(255,255,255,0.05); --border: rgba(255,255,255,0.1); }
-        body { font-family: 'Cairo', sans-serif; background: var(--bg); color: white; margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        :root { --red: #e41e26; --bg: #0a0a0a; --glass: rgba(255,255,255,0.05); }
+        body { font-family: 'Cairo', sans-serif; background: var(--bg); color: white; margin: 0; display: flex; height: 100vh; }
         
-        /*Sidebar*/
-        .sidebar { width: 280px; background: #000; border-left: 1px solid var(--border); display: flex; flex-direction: column; padding: 25px; }
-        .nav-link { padding: 15px; margin-bottom: 10px; background: var(--glass); border-radius: 12px; color: white; text-decoration: none; display: flex; align-items: center; gap: 10px; border: 1px solid var(--border); transition: 0.3s; }
-        .nav-link:hover { background: var(--red); transform: translateX(-5px); }
+        /* Sidebar */
+        .sidebar { width: 280px; background: #000; border-left: 1px solid rgba(255,255,255,0.1); display: flex; flex-direction: column; padding: 25px; }
+        .nav-item { padding: 15px; margin-bottom: 10px; background: var(--glass); border-radius: 12px; color: white; text-decoration: none; display: block; text-align: center; transition: 0.3s; border: 1px solid transparent; }
+        .nav-item:hover { background: var(--red); border-color: white; transform: scale(1.02); }
 
-        /*Chat*/
-        .main { flex: 1; display: flex; flex-direction: column; }
-        header { padding: 20px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; background: rgba(0,0,0,0.3); }
-        #chat-window { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        .bubble { max-width: 80%; padding: 15px 20px; border-radius: 20px; line-height: 1.6; }
+        /* Main */
+        .main-chat { flex: 1; display: flex; flex-direction: column; }
+        header { padding: 20px; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; justify-content: space-between; align-items: center; }
+        #chat-window { flex: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
+        .msg { max-width: 80%; padding: 15px; border-radius: 15px; line-height: 1.6; }
         .user { align-self: flex-end; background: var(--red); }
-        .ai { align-self: flex-start; background: var(--glass); border: 1px solid var(--border); }
+        .ai { align-self: flex-start; background: var(--glass); border: 1px solid rgba(255,255,255,0.1); }
 
-        /*Input*/
-        .input-area { padding: 25px; background: #000; border-top: 1px solid var(--border); }
-        .box { max-width: 900px; margin: auto; display: flex; gap: 10px; }
-        input { flex: 1; background: var(--glass); border: 1px solid var(--border); padding: 15px; border-radius: 15px; color: white; outline: none; }
-        button { background: var(--red); border: none; padding: 0 30px; border-radius: 15px; color: white; cursor: pointer; font-weight: bold; }
-        #loading { display: none; color: var(--red); text-align: center; margin-bottom: 5px; font-size: 12px; }
+        /* Input */
+        .input-box { padding: 20px; background: #000; display: flex; gap: 10px; }
+        input { flex: 1; background: var(--glass); border: 1px solid rgba(255,255,255,0.2); padding: 15px; border-radius: 10px; color: white; outline: none; }
+        button { background: var(--red); border: none; padding: 0 30px; border-radius: 10px; color: white; cursor: pointer; font-weight: bold; }
     </style>
 </head>
 <body>
 
-    <aside class="sidebar">
-        <div style="text-align: center; margin-bottom: 40px;">
-            <img src="https://upload.wikimedia.org/wikipedia/fr/0/04/ZamalekSC.png" width="90">
-            <h2 style="font-size: 18px; margin-top: 15px;">نواة الزمالك AI</h2>
+    <div class="sidebar">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <img src="https://upload.wikimedia.org/wikipedia/fr/0/04/ZamalekSC.png" width="80">
+            <h2 style="font-size: 18px;">نظام الزمالك الذكي</h2>
         </div>
-        <a href="user-dashboard.html" class="nav-link">📊 لوحة التحكم</a>
-        <a href="ai_panel.html" class="nav-link">⚙️ إعدادات النواة</a>
-        <div class="nav-link" onclick="location.reload()" style="cursor:pointer">🌓 تبديل المظهر</div>
-    </aside>
+        <a href="user-dashboard.html" class="nav-item">📊 لوحة التحكم</a>
+        <a href="ai_panel.html" class="nav-item">⚙️ إعدادات النواة</a>
+        <div class="nav-item" style="cursor:pointer" onclick="location.reload()">🔄 إعادة إنعاش النواة</div>
+    </div>
 
-    <main class="main">
+    <div class="main-chat">
         <header>
-            <div><span style="color:#0f0">●</span> الحالة: مستقر</div>
-            <div style="font-weight: 900; color: var(--red);">ZAMALEK VISION</div>
+            <div id="status">● الحالة: جاهز</div>
+            <div style="font-weight: 900; color: var(--red);">ZAMALEK CORE AI</div>
         </header>
         <div id="chat-window">
-            <div class="bubble ai">مرحباً يا ملكي. تم إعادة ضبط بروتوكولات الاتصال "العميقة". أنا جاهز الآن للرد عليك بدون أي قيود تقنية. اسأل ما شئت!</div>
+            <div class="msg ai">مرحباً بك يا ملكي. تم تحديث بروتوكول "النفاذ المباشر". أنا الآن متصل بالسيرفر وبانتظار أوامرك.</div>
         </div>
-        <div class="input-area">
-            <div id="loading">جاري سحب الرد من السيرفر الملكي...</div>
-            <div class="box">
-                <input type="text" id="user-input" placeholder="اكتب سؤالك هنا...">
-                <button onclick="send()">إرسال</button>
-            </div>
+        <div class="input-box">
+            <input type="text" id="user-in" placeholder="اسأل المحرك الملكي...">
+            <button onclick="ask()">إرسال</button>
         </div>
-    </main>
+    </div>
 
 <script>
-    // 🔑 الـ API Key الخاص بك
     const API_KEY = "AIzaSyA7xBwY2OqT1pI_YmWNLPoCRf5JUaEmGJ4";
 
-    async function send() {
-        const input = document.getElementById('user-input');
+    async function ask() {
+        const input = document.getElementById('user-in');
         const win = document.getElementById('chat-window');
-        const load = document.getElementById('loading');
+        const status = document.getElementById('status');
         const text = input.value.trim();
 
         if (!text) return;
 
-        add(text, 'user');
+        // إضافة رسالة المستخدم
+        append(text, 'user');
         input.value = '';
-        load.style.display = 'block';
+        status.innerText = "● جاري المعالجة...";
+        status.style.color = "var(--red)";
 
         try {
-            // استخدام رابط الـ v1beta لضمان التوافق مع الملفات المحلية
+            // استخدام الموديل الأسرع gemini-1.5-flash
             const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: "أنت ذكاء نادي الزمالك. أجب بذكاء وفخر ملكي: " + text }] }]
+                    contents: [{ parts: [{ text: "أنت ذكاء نادي الزمالك. رد بأسلوب ملكي: " + text }] }]
                 })
             });
 
             const data = await response.json();
             const reply = data.candidates[0].content.parts[0].text;
             
-            load.style.display = 'none';
-            add(reply, 'ai');
-
-            // صوت المعلق (من ملفاتك الأصلية)
-            const s = new SpeechSynthesisUtterance(reply);
-            s.lang = 'ar-SA';
-            window.speechSynthesis.speak(s);
+            append(reply, 'ai');
+            
+            // نطق الرد بصوت المعلق
+            const msg = new SpeechSynthesisUtterance(reply);
+            msg.lang = 'ar-SA';
+            window.speechSynthesis.speak(msg);
 
         } catch (e) {
-            load.style.display = 'none';
-            add("تم الاتصال بنجاح لكن السيرفر استغرق وقتاً طويلاً. يرجى إعادة إرسال السؤال.", 'ai');
+            append("يا ملكي، فيه مشكلة في وصول البيانات. جرب تفتح الملف ده من خلال (Live Server) أو ارفعه على استضافة عشان المتصفح يسمح بالاتصال.", "ai");
+        } finally {
+            status.innerText = "● الحالة: جاهز";
+            status.style.color = "#0f0";
         }
     }
 
-    function add(t, c) {
+    function append(t, c) {
         const d = document.createElement('div');
-        d.className = `bubble ${c}`;
+        d.className = `msg ${c}`;
         d.innerText = t;
-        document.getElementById('chat-window').appendChild(d);
-        document.getElementById('chat-window').scrollTop = document.getElementById('chat-window').scrollHeight;
+        win.appendChild(d);
+        win.scrollTop = win.scrollHeight;
     }
-    
-    document.getElementById('user-input').onkeydown = (e) => { if(e.key==='Enter') send(); };
+
+    document.getElementById('user-in').addEventListener('keypress', (e) => { if(e.key === 'Enter') ask(); });
 </script>
 </body>
 </html>
