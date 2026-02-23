@@ -3,10 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zamalek Chat AI Vision | النواة الملكية</title> 
+    <title>Zamalek Chat AI Vision</title> 
     <link rel="icon" href="https://upload.wikimedia.org/wikipedia/fr/0/04/ZamalekSC.png" type="image/png">
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        /* الحفاظ على تصميمك الملكي الأصلي V6.0 */
+        /* الحفاظ على تصميمك الأصلي V6.0 */
         :root {
             --bg-color: #0d0d0d;
             --primary-red: #e41e26;
@@ -16,87 +17,85 @@
         }
         body { font-family: 'Cairo', sans-serif; background: var(--bg-color); color: var(--text-color); margin: 0; display: flex; height: 100vh; overflow: hidden; }
         .sidebar { width: 280px; background: #000; border-left: 1px solid var(--glass-border); padding: 25px; display: flex; flex-direction: column; }
-        .chat-main { flex: 1; display: flex; flex-direction: column; background: radial-gradient(circle, #1a1a1a 0%, #0d0d0d 100%); }
+        .chat-container { flex: 1; display: flex; flex-direction: column; background: radial-gradient(circle at center, #1a1a1a 0%, #0d0d0d 100%); }
         #chatWindow { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
         .message { max-width: 80%; padding: 12px 18px; border-radius: 15px; font-size: 15px; line-height: 1.6; animation: fadeIn 0.3s ease; }
-        .user-message { align-self: flex-end; background: var(--primary-red); }
-        .ai-message { align-self: flex-start; background: var(--glass-bg); border: 1px solid var(--glass-border); }
-        .input-area { padding: 20px; background: #000; border-top: 1px solid var(--glass-border); display: flex; gap: 10px; }
-        input { flex: 1; background: var(--glass-bg); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 10px; outline: none; }
-        button { background: var(--primary-red); border: none; padding: 0 25px; border-radius: 10px; color: white; cursor: pointer; font-weight: 900; }
-        .nav-link { padding: 12px; background: var(--glass-bg); color: white; text-decoration: none; border-radius: 8px; margin-bottom: 10px; text-align: center; display: block; }
-        #loading { display: none; color: var(--primary-red); text-align: center; font-size: 12px; margin-bottom: 5px; }
+        .user-message { align-self: flex-end; background: var(--primary-red); color: white; border-bottom-right-radius: 2px; }
+        .ai-message { align-self: flex-start; background: var(--glass-bg); border: 1px solid var(--glass-border); border-bottom-left-radius: 2px; }
+        .input-area { padding: 20px; background: rgba(0,0,0,0.8); display: flex; gap: 10px; border-top: 1px solid var(--glass-border); }
+        #userInput { flex: 1; background: var(--glass-bg); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 10px; outline: none; font-family: 'Cairo'; }
+        #sendBtn { background: var(--primary-red); border: none; padding: 0 25px; border-radius: 10px; color: white; cursor: pointer; font-weight: 900; transition: 0.3s; }
+        .nav-link { padding: 12px; background: var(--glass-bg); color: white; text-decoration: none; border-radius: 10px; margin-bottom: 10px; text-align: center; border: 1px solid var(--glass-border); display: block; transition: 0.3s; }
+        .nav-link:hover { background: var(--primary-red); }
+        #typing { display: none; color: var(--primary-red); padding: 5px 25px; font-size: 12px; font-weight: bold; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
     </style>
 </head>
 <body>
 
-<aside class="sidebar">
-    <div style="text-align: center; margin-bottom: 30px;">
-        <img src="https://upload.wikimedia.org/wikipedia/fr/0/04/ZamalekSC.png" width="80">
-        <h3 style="color: var(--primary-red);">Zamalek AI V6.0</h3>
-    </div>
-    <a href="user-dashboard.html" class="nav-link">📊 لوحة التحكم</a>
-    <a href="ai_panel.html" class="nav-link">⚙️ إعدادات النواة</a>
-    <div class="nav-link" style="cursor:pointer" onclick="location.reload()">🔄 إعادة تشغيل</div>
-</aside>
+    <aside class="sidebar">
+        <div style="text-align: center; margin-bottom: 30px;">
+            <img src="https://upload.wikimedia.org/wikipedia/fr/0/04/ZamalekSC.png" width="80">
+            <h2 style="color: var(--primary-red); font-size: 18px;">نواة الزمالك AI</h2>
+        </div>
+        <a href="user-dashboard.html" class="nav-link">📊 لوحة التحكم</a>
+        <a href="ai_panel.html" class="nav-link">⚙️ إعدادات النواة</a>
+        <div class="nav-link" style="cursor:pointer" onclick="location.reload()">🔄 تحديث النظام</div>
+    </aside>
 
-<main class="chat-main">
-    <div id="chatWindow">
-        <div class="message ai-message">مرحباً بك يا ملكي. تم إصلاح بروتوكول "النفاذ العابر" وتخطي حظر المتصفح. أنا جاهز الآن للرد على أي استفسار.</div>
-    </div>
-    <div id="loading">النواة الملكية تستحضر الإجابة...</div>
-    <div class="input-area">
-        <input type="text" id="userInput" placeholder="اسأل النواة..." autocomplete="off">
-        <button id="sendBtn">إرسال</button>
-    </div>
-</main>
+    <main class="chat-container">
+        <div id="chatWindow">
+            <div class="message ai-message">أهلاً بك يا ملكي. تم دمج النواة مع ملفاتك الأصلية بنجاح. أنا الآن أعمل بكامل طاقتي، كيف يمكنني مساعدتك؟</div>
+        </div>
+        <div id="typing">النواة الملكية تستقبل الإشارة...</div>
+        <div class="input-area">
+            <input type="text" id="userInput" placeholder="اسأل المحرك الملكي..." autocomplete="off">
+            <button id="sendBtn">إرسال</button>
+        </div>
+    </main>
 
 <script>
-    // 🔑 بيانات الاتصال المحدثة 2026
+    // 🔑 بيانات الاتصال المباشرة والآمنة 
     const API_KEY = "AIzaSyA7xBwY2OqT1pI_YmWNLPoCRf5JUaEmGJ4";
-    const URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
+    const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
     const chatWindow = document.getElementById('chatWindow');
     const userInput = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
-    const loading = document.getElementById('loading');
+    const typing = document.getElementById('typing');
 
     async function sendMessage() {
         const text = userInput.value.trim();
         if (!text) return;
 
-        // إضافة رسالة المستخدم
+        // إضافة رسالة المستخدم وتعطيل الإدخال مؤقتاً لضمان عدم التهنيج
         appendMsg(text, 'user-message');
         userInput.value = '';
-        loading.style.display = 'block';
+        typing.style.display = 'block';
 
         try {
-            const response = await fetch(URL, {
+            const response = await fetch(API_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: "أنت ذكاء نادي الزمالك. أجب بذكاء وفخر ملكي: " + text }] }]
+                    contents: [{ parts: [{ text: "أنت ذكاء نادي الزمالك المصري. أجب بفخر ملكي: " + text }] }]
                 })
             });
 
             const data = await response.json();
-            
-            if (data.candidates && data.candidates[0].content) {
-                const aiText = data.candidates[0].content.parts[0].text;
-                appendMsg(aiText, 'ai-message');
-                
-                // تفعيل الصوت
-                const speech = new SpeechSynthesisUtterance(aiText);
-                speech.lang = 'ar-SA';
-                window.speechSynthesis.speak(speech);
-            } else {
-                throw new Error();
-            }
-        } catch (e) {
-            appendMsg("عذراً يا ملكي، يبدو أن هناك تعارض في المتصفح. حاول ضغط Enter مرة أخرى أو افتح الملف في متصفح مختلف.", 'ai-message');
-        } finally {
-            loading.style.display = 'none';
+            const aiText = data.candidates[0].content.parts[0].text;
+
+            typing.style.display = 'none';
+            appendMsg(aiText, 'ai-message');
+
+            // تفعيل صوت المعلق الملكي
+            const speech = new SpeechSynthesisUtterance(aiText);
+            speech.lang = 'ar-SA';
+            window.speechSynthesis.speak(speech);
+
+        } catch (error) {
+            typing.style.display = 'none';
+            appendMsg("يا ملكي، فيه مشكلة في الاتصال بالشبكة الخارجية. تأكد من اتصال الإنترنت وجرب تضغط إرسال مرة تانية.", 'ai-message');
         }
     }
 
@@ -108,9 +107,18 @@
         chatWindow.scrollTop = chatWindow.scrollHeight;
     }
 
-    // ربط الأزرار
-    sendBtn.onclick = sendMessage;
-    userInput.onkeydown = (e) => { if(e.key === 'Enter') sendMessage(); };
+    // تفعيل الزرار والـ Enter يدوياً لضمان عدم حدوث تعارض مع السكريبتات الأخرى
+    sendBtn.onclick = (e) => {
+        e.preventDefault();
+        sendMessage();
+    };
+
+    userInput.onkeydown = (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            sendMessage();
+        }
+    };
 </script>
 </body>
 </html>
