@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Zamalek Chat AI Vision</title> 
+    <title>Zamalek Chat AI Vision | النواة الملكية</title> 
     <link rel="icon" href="https://upload.wikimedia.org/wikipedia/fr/0/04/ZamalekSC.png" type="image/png">
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
-        /* الحفاظ على تصميمك الأصلي V6.0 */
+        /* الحفاظ على تصميمك الملكي الأصلي V6.0 - Glassmorphism */
         :root {
             --bg-color: #0d0d0d;
             --primary-red: #e41e26;
@@ -16,109 +16,116 @@
             --glass-border: rgba(255, 255, 255, 0.1);
         }
         body { font-family: 'Cairo', sans-serif; background: var(--bg-color); color: var(--text-color); margin: 0; display: flex; height: 100vh; overflow: hidden; }
+        
+        /* القائمة الجانبية المبرمجة */
         .sidebar { width: 280px; background: #000; border-left: 1px solid var(--glass-border); padding: 25px; display: flex; flex-direction: column; }
-        .chat-container { flex: 1; display: flex; flex-direction: column; background: radial-gradient(circle at center, #1a1a1a 0%, #0d0d0d 100%); }
-        #chatWindow { flex: 1; padding: 25px; overflow-y: auto; display: flex; flex-direction: column; gap: 15px; }
-        .message { max-width: 80%; padding: 12px 18px; border-radius: 15px; font-size: 15px; line-height: 1.6; animation: fadeIn 0.3s ease; }
+        .nav-link { padding: 15px; background: var(--glass-bg); color: white; text-decoration: none; border-radius: 12px; margin-bottom: 12px; text-align: center; border: 1px solid var(--glass-border); transition: 0.3s; font-weight: bold; }
+        .nav-link:hover { background: var(--primary-red); transform: translateX(-5px); }
+
+        /* منطقة المحادثة */
+        .chat-container { flex: 1; display: flex; flex-direction: column; position: relative; background: radial-gradient(circle at center, #1a1a1a 0%, #0d0d0d 100%); }
+        #chatWindow { flex: 1; padding: 30px; overflow-y: auto; display: flex; flex-direction: column; gap: 20px; }
+        .message { max-width: 80%; padding: 15px 20px; border-radius: 20px; line-height: 1.7; font-size: 15px; animation: slideIn 0.3s ease; }
         .user-message { align-self: flex-end; background: var(--primary-red); color: white; border-bottom-right-radius: 2px; }
         .ai-message { align-self: flex-start; background: var(--glass-bg); border: 1px solid var(--glass-border); border-bottom-left-radius: 2px; }
-        .input-area { padding: 20px; background: rgba(0,0,0,0.8); display: flex; gap: 10px; border-top: 1px solid var(--glass-border); }
-        #userInput { flex: 1; background: var(--glass-bg); border: 1px solid var(--glass-border); color: white; padding: 12px; border-radius: 10px; outline: none; font-family: 'Cairo'; }
-        #sendBtn { background: var(--primary-red); border: none; padding: 0 25px; border-radius: 10px; color: white; cursor: pointer; font-weight: 900; transition: 0.3s; }
-        .nav-link { padding: 12px; background: var(--glass-bg); color: white; text-decoration: none; border-radius: 10px; margin-bottom: 10px; text-align: center; border: 1px solid var(--glass-border); display: block; transition: 0.3s; }
-        .nav-link:hover { background: var(--primary-red); }
-        #typing { display: none; color: var(--primary-red); padding: 5px 25px; font-size: 12px; font-weight: bold; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; } }
+
+        /* منطقة الإدخال المصلحة */
+        .input-area { padding: 25px; background: rgba(0,0,0,0.9); border-top: 1px solid var(--glass-border); display: flex; gap: 15px; }
+        #userInput { flex: 1; background: var(--glass-bg); border: 1px solid var(--glass-border); color: white; padding: 15px; border-radius: 12px; outline: none; font-family: 'Cairo'; font-size: 16px; }
+        #sendBtn { background: var(--primary-red); border: none; padding: 0 35px; border-radius: 12px; color: white; cursor: pointer; font-weight: 900; transition: 0.3s; }
+        #sendBtn:hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(228, 30, 38, 0.4); }
+
+        #typing { display: none; color: var(--primary-red); padding: 5px 30px; font-size: 13px; font-weight: bold; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body>
 
-    <aside class="sidebar">
-        <div style="text-align: center; margin-bottom: 30px;">
-            <img src="https://upload.wikimedia.org/wikipedia/fr/0/04/ZamalekSC.png" width="80">
-            <h2 style="color: var(--primary-red); font-size: 18px;">نواة الزمالك AI</h2>
+    <div class="sidebar">
+        <div style="text-align: center; margin-bottom: 40px;">
+            <img src="https://upload.wikimedia.org/wikipedia/fr/0/04/ZamalekSC.png" width="90">
+            <h2 style="color: var(--primary-red); margin-top: 15px;">نواة الزمالك AI</h2>
         </div>
         <a href="user-dashboard.html" class="nav-link">📊 لوحة التحكم</a>
         <a href="ai_panel.html" class="nav-link">⚙️ إعدادات النواة</a>
         <div class="nav-link" style="cursor:pointer" onclick="location.reload()">🔄 تحديث النظام</div>
-    </aside>
+    </div>
 
-    <main class="chat-container">
+    <div class="chat-container">
+        <header style="padding: 20px; border-bottom: 1px solid var(--glass-border); text-align: center; font-weight: 900; color: var(--primary-red); letter-spacing: 1px;">ZAMALEK CORE VISION V6.0</header>
         <div id="chatWindow">
-            <div class="message ai-message">أهلاً بك يا ملكي. تم دمج النواة مع ملفاتك الأصلية بنجاح. أنا الآن أعمل بكامل طاقتي، كيف يمكنني مساعدتك؟</div>
+            <div class="message ai-message">أهلاً بك يا ملكي. تم دمج بروتوكول الإرسال بنجاح وتجاوز عوائق المتصفح. أنا الآن في كامل استعدادي، ماذا لديك؟</div>
         </div>
-        <div id="typing">النواة الملكية تستقبل الإشارة...</div>
+        <div id="typing">النواة الملكية تحلل الإشارة الآن...</div>
         <div class="input-area">
-            <input type="text" id="userInput" placeholder="اسأل المحرك الملكي..." autocomplete="off">
+            <input type="text" id="userInput" placeholder="اكتب رسالتك للمحرك الملكي..." autocomplete="off">
             <button id="sendBtn">إرسال</button>
         </div>
-    </main>
+    </div>
 
 <script>
-    // 🔑 بيانات الاتصال المباشرة والآمنة 
+    // استخدمنا الـ IDs الأصلية من ملفك لضمان عمل الزرار والـ Enter
     const API_KEY = "AIzaSyA7xBwY2OqT1pI_YmWNLPoCRf5JUaEmGJ4";
     const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${API_KEY}`;
 
     const chatWindow = document.getElementById('chatWindow');
     const userInput = document.getElementById('userInput');
     const sendBtn = document.getElementById('sendBtn');
-    const typing = document.getElementById('typing');
+    const typingIndicator = document.getElementById('typing');
 
-    async function sendMessage() {
+    async function handleChat() {
         const text = userInput.value.trim();
         if (!text) return;
 
-        // إضافة رسالة المستخدم وتعطيل الإدخال مؤقتاً لضمان عدم التهنيج
+        // 1. عرض رسالة المستخدم فوراً
         appendMsg(text, 'user-message');
         userInput.value = '';
-        typing.style.display = 'block';
+        typingIndicator.style.display = 'block';
 
         try {
+            // 2. إرسال الطلب (التنسيق المتوافق مع المتصفحات الحديثة 2026)
             const response = await fetch(API_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    contents: [{ parts: [{ text: "أنت ذكاء نادي الزمالك المصري. أجب بفخر ملكي: " + text }] }]
+                    contents: [{ parts: [{ text: "أنت ذكاء نادي الزمالك المصري. أجب بفخر وبأسلوب ملكي راقي: " + text }] }]
                 })
             });
+
+            if (!response.ok) throw new Error("Connection Error");
 
             const data = await response.json();
             const aiText = data.candidates[0].content.parts[0].text;
 
-            typing.style.display = 'none';
+            // 3. عرض الرد وتفعيل الصوت (الموجود أصلاً في ملفاتك)
+            typingIndicator.style.display = 'none';
             appendMsg(aiText, 'ai-message');
-
-            // تفعيل صوت المعلق الملكي
-            const speech = new SpeechSynthesisUtterance(aiText);
-            speech.lang = 'ar-SA';
-            window.speechSynthesis.speak(speech);
+            
+            const utter = new SpeechSynthesisUtterance(aiText);
+            utter.lang = 'ar-SA';
+            window.speechSynthesis.speak(utter);
 
         } catch (error) {
-            typing.style.display = 'none';
-            appendMsg("يا ملكي، فيه مشكلة في الاتصال بالشبكة الخارجية. تأكد من اتصال الإنترنت وجرب تضغط إرسال مرة تانية.", 'ai-message');
+            typingIndicator.style.display = 'none';
+            appendMsg("يا ملكي، فيه مشكلة تقنية بسيطة في " + error.message + ". جرب تضغط إرسال تاني أو افتح الملف بمتصفح Microsoft Edge.", 'ai-message');
         }
     }
 
-    function appendMsg(t, c) {
-        const d = document.createElement('div');
-        d.className = `message ${c}`;
-        d.innerText = t;
-        chatWindow.appendChild(d);
+    function appendMsg(text, className) {
+        const div = document.createElement('div');
+        div.className = `message ${className}`;
+        div.innerText = text;
+        chatWindow.appendChild(div);
         chatWindow.scrollTop = chatWindow.scrollHeight;
     }
 
-    // تفعيل الزرار والـ Enter يدوياً لضمان عدم حدوث تعارض مع السكريبتات الأخرى
-    sendBtn.onclick = (e) => {
-        e.preventDefault();
-        sendMessage();
-    };
+    // تفعيل ضغطة الزر
+    sendBtn.onclick = handleChat;
 
-    userInput.onkeydown = (e) => {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            sendMessage();
-        }
-    };
+    // تفعيل زر Enter
+    userInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') handleChat();
+    });
 </script>
 </body>
 </html>
